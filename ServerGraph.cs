@@ -73,7 +73,7 @@ public class ServerGraph
     // 3 marks
     // Add a webpage to the server with the given name
     // Return true if successful; other return false
-    public bool AddWebPage(WebPage w, string name, ServerGraph S)
+    public bool AddWebPage(WebPage w, string name)
     {
         int i;
 
@@ -90,7 +90,7 @@ public class ServerGraph
     // Remove the server with the given name by assigning its connections
     // and webpages to the other server
     // Return true if successful; otherwise return false
-    public bool RemoveServer(string name, string other, ServerGraph S)
+    public bool RemoveServer(string name, string other)
     {
         int i;
         int j = FindServer(other);
@@ -112,6 +112,7 @@ public class ServerGraph
                     }
                     NumServers--;
                     return true;
+
                 }
             }
         }
@@ -135,16 +136,24 @@ public class ServerGraph
     }
     // Return the shortest path from one server to another
     // Hint: Use a variation of the breadth-first search
-    public int ShortestPath(string from, string to, ServerGraph S)
+    public int ShortestPath(string from, string to)
     {
 
     }
     // 4 marks
     // Print the name and connections of each server as well as
     // the names of the webpages it hosts
-    public void PrintGraph()
-    {
+    public void PrintGraph(){
+
+            for (int i = 0; i < V.Count; i++){
+                Console.WriteLine(V[i].Name);
+            for (j = 0; j < V[i].E.Count; j++){
+                Console.WriteLine("(" + V[i].Name + "," + V[i].E[j] + ","  + V[i].P + ")");
+            
+        }
 
     }
-
+ }
 }
+
+
