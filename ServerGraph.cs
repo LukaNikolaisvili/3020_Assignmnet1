@@ -73,7 +73,7 @@ public class ServerGraph
     // 3 marks
     // Add a webpage to the server with the given name
     // Return true if successful; other return false
-    public bool AddWebPage(WebPage w, string name)
+    public bool AddWebPage(WebPage w, string name, ServerGraph S)
     {
         int i;
 
@@ -90,7 +90,7 @@ public class ServerGraph
     // Remove the server with the given name by assigning its connections
     // and webpages to the other server
     // Return true if successful; otherwise return false
-    public bool RemoveServer(string name, string other)
+    public bool RemoveServer(string name, string other, ServerGraph S)
     {
         int i;
         int j = FindServer(other);
@@ -135,7 +135,7 @@ public class ServerGraph
     }
     // Return the shortest path from one server to another
     // Hint: Use a variation of the breadth-first search
-    public int ShortestPath(string from, string to)
+    public int ShortestPath(string from, string to, ServerGraph S)
     {
 
     }
