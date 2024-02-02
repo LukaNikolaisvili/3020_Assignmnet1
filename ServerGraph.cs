@@ -53,7 +53,7 @@ public class ServerGraph : WebGraph{
         Console.WriteLine("no server ");
         return false;
     }
-
+    
     public bool AddWebPage(WebPage w, string name)
     {
         int i;
@@ -126,7 +126,7 @@ class Program
     {
         // Step 1: Instantiate a server graph and a web graph
         ServerGraph serverGraph = new ServerGraph();
-        WebGraph webGraph = new WebGraph();
+        // WebGraph webGraph = new WebGraph();
         WebPage page1 = new WebPage("name1","localhost");
         // Step 2: Add three servers
         serverGraph.AddServer("Server1", "Server1");
@@ -134,7 +134,7 @@ class Program
         Console.WriteLine(serverGraph.AddConnection("server1","server2"));
         serverGraph.PrintGraph();
         Console.WriteLine(serverGraph.RemoveServer("server1","server2"));
-        Console.WriteLine(serverGraph.AddWebPage(page1,"name"));
+        // Console.WriteLine(serverGraph.AddWebPage(page1,"name"));
     }   
 }
 }

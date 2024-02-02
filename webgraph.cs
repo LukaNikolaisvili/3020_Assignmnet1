@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-public class WebPage
+public class WebPage 
 {
     public string Name { get; set; }
     public string Server { get; set; }
@@ -34,8 +34,7 @@ public class WebGraph
     private int FindPage(string name)
     {
 
-        for (int i = 0; i < P.count; i++)
-        {
+        for (int i = 0; i < P.Count; i++){
             if (P[i].Name == name)
                 return 1;
         }
@@ -43,18 +42,26 @@ public class WebGraph
     }
 
 
-    public bool AddPage(string name, string host, ServerGraph S)
+    public bool AddPage(string name,string host,ServerGraph S)
     {
-        return false;
+        WebPage createPage = new WebPage(name,host);
+
+        S.P.Add(createPage);
+
+
+        return true;
     }
 
     public bool RemovePage(string name, ServerGraph S)
     {
+
         return false;
     }
 
     public bool AddLink(string from, string to)
     {
+        
+
         return false;
     }
 
