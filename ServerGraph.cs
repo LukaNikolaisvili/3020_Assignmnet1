@@ -116,18 +116,9 @@ public class ServerGraph : WebGraph{
         return 0;
     }
 
-    public void PrintGraph()
-    {
-        for (int i = 0; i < NumServers; i++)
-        {
-            Console.WriteLine(V[i].Name);
-            for (int j = 0; j < NumServers; j++)
-            {
-                Console.WriteLine("(" + V[i].Name + "," + V[i].E[j] + "," + V[i].P + ")");
-            }
-        }
+    public void PrintGraph() {
+       Console.WriteLine("hello");
     }
-}
 
 class Program
 {
@@ -140,3 +131,5 @@ class Program
         serverGraph.AddServer("Server1", "Server1");
     }
 }
+}
+
