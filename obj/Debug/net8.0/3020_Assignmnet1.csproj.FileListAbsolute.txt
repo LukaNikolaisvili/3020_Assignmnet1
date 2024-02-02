@@ -1,0 +1,15 @@
+C:\Users\N1ko\3020_Assignmnet1\obj\Debug\net8.0\3020_Assignmnet1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\N1ko\3020_Assignmnet1\obj\Debug\net8.0\3020_Assignmnet1.AssemblyInfoInputs.cache
+C:\Users\N1ko\3020_Assignmnet1\obj\Debug\net8.0\3020_Assignmnet1.AssemblyInfo.cs
+C:\Users\N1ko\3020_Assignmnet1\obj\Debug\net8.0\3020_Assignmnet1.csproj.CoreCompileInputs.cache
+C:\Users\N1ko\3020_Assignmnet1\obj\Debug\net8.0\3020_Assignmnet1.sourcelink.json
+C:\Users\N1ko\3020_Assignmnet1\bin\Debug\net8.0\3020_Assignmnet1.exe
+C:\Users\N1ko\3020_Assignmnet1\bin\Debug\net8.0\3020_Assignmnet1.deps.json
+C:\Users\N1ko\3020_Assignmnet1\bin\Debug\net8.0\3020_Assignmnet1.runtimeconfig.json
+C:\Users\N1ko\3020_Assignmnet1\bin\Debug\net8.0\3020_Assignmnet1.dll
+C:\Users\N1ko\3020_Assignmnet1\bin\Debug\net8.0\3020_Assignmnet1.pdb
+C:\Users\N1ko\3020_Assignmnet1\obj\Debug\net8.0\3020_Assignmnet1.dll
+C:\Users\N1ko\3020_Assignmnet1\obj\Debug\net8.0\refint\3020_Assignmnet1.dll
+C:\Users\N1ko\3020_Assignmnet1\obj\Debug\net8.0\3020_Assignmnet1.pdb
+C:\Users\N1ko\3020_Assignmnet1\obj\Debug\net8.0\3020_Assignmnet1.genruntimeconfig.cache
+C:\Users\N1ko\3020_Assignmnet1\obj\Debug\net8.0\ref\3020_Assignmnet1.dll
