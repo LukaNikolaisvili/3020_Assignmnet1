@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-public class WebPage 
+public class WebPage
 {
     public string Name { get; set; }
     public string Server { get; set; }
@@ -75,8 +75,11 @@ public class WebGraph
         return 2;
     }
 
-    public void PrintGraph()
-    {
+     public void PrintGraph(){
+       
+       
+        }
+     }
 
-    }
-}
+
+     

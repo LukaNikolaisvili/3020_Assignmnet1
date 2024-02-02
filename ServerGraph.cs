@@ -1,4 +1,5 @@
-public class ServerGraph : WebGraph{
+public class ServerGraph : WebGraph
+{
     private class WebServer
     {
         public string Name;
@@ -19,7 +20,7 @@ public class ServerGraph : WebGraph{
     public ServerGraph()
     {
         V = new WebServer[2];
-        NumServers = 0; 
+        NumServers = 0;
     }
 
     private int FindServer(string name)
@@ -27,7 +28,7 @@ public class ServerGraph : WebGraph{
         int i;
         for (i = 0; i < NumServers; i++)
         {
-            if (V[i].Name == name) 
+            if (V[i].Name == name)
                 return i;
         }
         return -1;
@@ -35,7 +36,11 @@ public class ServerGraph : WebGraph{
 
     private void DoubleCapacity()
     {
-
+        int newCapacity = V.Length * 2;
+        while (V.Length < newCapacity)
+        {
+            V.Append(new WebServer(""));
+        }
     }
 
     public bool AddServer(string name, string other)
@@ -53,7 +58,7 @@ public class ServerGraph : WebGraph{
         Console.WriteLine("no server ");
         return false;
     }
-    
+
     public bool AddWebPage(WebPage w, string name)
     {
         int i;
@@ -108,7 +113,7 @@ public class ServerGraph : WebGraph{
 
     public string[] CriticalServers()
     {
-        return new string[] { "test" }; 
+        return new string[] { "test" };
     }
 
     public int ShortestPath(string from, string to)
@@ -116,9 +121,21 @@ public class ServerGraph : WebGraph{
         return 0;
     }
 
-    public void PrintGraph() {
-       Console.WriteLine("hello");
+    public void PrintGraph()
+    {
+        for (int i = 0; i < NumServers; i++)
+        {
+            Console.WriteLine(V[i].Name);
+            for (int j = 0; j < NumServers; j++)
+            {
+                Console.WriteLine("(" + V[i].Name + "," + V[i].E[j] + "," + V[i].P + ")");
+            }
+        }
     }
+
+
+
+}
 
 class Program
 {
@@ -126,16 +143,20 @@ class Program
     {
         // Step 1: Instantiate a server graph and a web graph
         ServerGraph serverGraph = new ServerGraph();
-        // WebGraph webGraph = new WebGraph();
-        WebPage page1 = new WebPage("name1","localhost");
+        WebGraph webGraph = new WebGraph();
+        WebPage page1 = new WebPage("name1", "localhost");
         // Step 2: Add three servers
         serverGraph.AddServer("Server1", "Server1");
 
-        Console.WriteLine(serverGraph.AddConnection("server1","server2"));
+        Console.WriteLine(serverGraph.AddConnection("server1", "server2"));
         serverGraph.PrintGraph();
-        Console.WriteLine(serverGraph.RemoveServer("server1","server2"));
-        // Console.WriteLine(serverGraph.AddWebPage(page1,"name"));
-    }   
-}
+        Console.WriteLine(serverGraph.RemoveServer("server1", "server2"));
+        Console.WriteLine(serverGraph.AddWebPage(page1,"name"));
+
+
+        //Take a look at this method...
+        serverGraph.PrintGraph();
+    }
+
 }
 
