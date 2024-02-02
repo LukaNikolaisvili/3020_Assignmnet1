@@ -11,7 +11,7 @@ public class WebPage
     {
         Name = name;
         Server = host;
-        Console.WriteLine(name + " and the host is " + host);
+        Console.WriteLine(name + " is hosted on " + host);
     }
 
     public int FindLink(string name)
@@ -34,7 +34,8 @@ public class WebGraph
     private int FindPage(string name)
     {
 
-        for (int i = 0; i < P.Count; i++){
+        for (int i = 0; i < P.Count; i++)
+        {
             if (P[i].Name == name)
                 return 1;
         }
@@ -42,32 +43,71 @@ public class WebGraph
     }
 
 
-    public bool AddPage(string name,string host,ServerGraph S)
+    public bool AddPage(string name, string host, ServerGraph S)
     {
-        WebPage createPage = new WebPage(name,host);
+        if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(host) || S == null)
+        {
+            return false;
+        }
+        else
+        {
+            WebPage createPage = new WebPage(name, host);
 
-        S.P.Add(createPage);
+            S.P.Add(createPage);
 
+            return true;
 
-        return true;
+        }
     }
 
     public bool RemovePage(string name, ServerGraph S)
     {
 
+        int id = FindPage(name);
+        if (id != -1)
+        {
+            S.P.RemoveAt(id);
+            return true;
+        }
+
         return false;
     }
 
     public bool AddLink(string from, string to)
-    {
-        
+    {   
+
+        int indexFrom = FindPage(from);
+        int indexTo = FindPage(to);
+
+        if(indexFrom != -1 && indexTo != -1){
+            P[indexFrom].E.Add(P[indexTo]);
+
+            return true;
+        }
 
         return false;
+
     }
 
     public bool RemoveLink(string from, string to)
     {
+
+        int indexFrom = FindPage(from);
+        int indexTo = FindPage(to);
+
+        if(indexFrom != -1 && indexTo != 1){
+             
+             
+             if(P[indexFrom].E.Contains(P[indexTo])){
+
+                P[indexFrom].E.Remove(P[indexTo]);
+
+                return true;
+             }
+        }
+
         return false;
+    
     }
 
     public float AvgShortestPaths(string name, ServerGraph S)
@@ -75,11 +115,11 @@ public class WebGraph
         return 2;
     }
 
-     public void PrintGraph(){
-       
-       
-        }
-     }
+    public void PrintGraph()
+    {
 
 
-     
+    }
+}
+
+
