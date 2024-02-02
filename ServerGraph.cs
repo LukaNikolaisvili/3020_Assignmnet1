@@ -111,10 +111,11 @@ public class ServerGraph : WebGraph
         return false;
     }
 
+	
     public string[] CriticalServers()
     {
-        return new string[] { "test" };
-    }
+    
+	}
 
     public int ShortestPath(string from, string to)
     {
