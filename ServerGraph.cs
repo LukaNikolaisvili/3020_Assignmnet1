@@ -7,9 +7,11 @@ public List<WebPage> E {get; set;}
 
 public WebPage(string name, string host){
 
+name = "test";
+Console.WriteLine(name);
 }
 public int FindLink(string name){
-    
+    return 1;
 }
 
 
@@ -25,39 +27,41 @@ public WebGraph( ){
 // 2 marks
 // Return the index of the webpage with the given name; otherwise return -1
 private int FindPage(string name){
-    
+    return 10;
 }
 // 4 marks
 // Add a webpage with the given name and store it on the host server
 // Return true if successful; otherwise return false
 public bool AddPage(string name, string host, ServerGraph S){
-    
+    return false;
 }
 // 8 marks
 // Remove the webpage with the given name, including the hyperlinks
 // from and to the webpage
 // Return true if successful; otherwise return false
 public bool RemovePage (string name, ServerGraph S){
-    
+    return false;
 }
 // 3 marks
 // Add a hyperlink from one webpage to another
 // Return true if successful; otherwise return false
 public bool AddLink (string from, string to){
-    
+
+    return false;
 }
 // 3 marks
 // Remove a hyperlink from one webpage to another
 // Return true if successful; otherwise return false
 public bool RemoveLink (string from, string to){
     
+    return false;
 }
 // 6 marks
 // Return the average length of the shortest paths from the webpage with
 // given name to each of its hyperlinks
 // Hint: Use the method ShortestPath in the class ServerGraph
 public float AvgShortestPaths(string name, ServerGraph S){
-
+    return 1.2;
 }
 // 3 marks
 // Print the name and hyperlinks of each webpage
@@ -238,6 +242,22 @@ public class ServerGraph
 
     }
  }
+
+class Program
+{
+    static void Main()
+    {
+        // Step 1: Instantiate a server graph and a web graph
+        ServerGraph serverGraph = new ServerGraph();
+
+
+        // Step 2: Add three servers
+        serverGraph.AddServer("Server1", "Server1");
+
+    }
+}
+
+
 }
 
 
