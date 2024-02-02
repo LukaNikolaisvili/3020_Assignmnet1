@@ -1,5 +1,8 @@
 using System.Linq.Expressions;
 
+using System;
+using System.Collections.Generic;
+
 public class ServerGraph : WebGraph
 {
     private class WebServer
@@ -21,11 +24,17 @@ public class ServerGraph : WebGraph
 
     public ServerGraph()
     {
+        // V = new WebServer[2];
+        // NumServers = 0;
 
-        V = new WebServer[2];
-        NumServers = 0;
+
+        V = new WebServer[3]; // Increase the capacity to accommodate "hi"
+        NumServers = 1; // Start with 1 server ("hi" server)
+
+        // Add the "hi" server
+        V[0] = new WebServer("hi");
+        V[0].E.Add(false); // "hi" server has no connections initially
     }
-
 
     private int FindServer(string name)
     {
@@ -40,14 +49,10 @@ public class ServerGraph : WebGraph
         return -1;
     }
 
-
     private void DoubleCapacity()
     {
         int newCapacity = V.Length * 2;
-        while (V.Length < newCapacity)
-        {
-            V.Append(new WebServer(""));
-        }
+        Array.Resize(ref V, newCapacity);
     }
 
     public void Capacity2()
@@ -59,25 +64,53 @@ public class ServerGraph : WebGraph
     {
         int i, j;
 
-        if ((i = FindServer(name)) > -1 && (j = FindServer(other)) > -1)
+        // Check if the other server exists
+        if ((j = FindServer(other)) != -1)
         {
-            if (!V[i].E[j])
+            // Check if the server to be added doesn't already exist
+            if ((i = FindServer(name)) == -1)
             {
-                V[i].E[j] = true;
+                // Check if the array needs resizing
+                if (NumServers == V.Length)
+                {
+                    DoubleCapacity();
+                }
+
+                // Add the new server and connect it to the existing server
+                V[NumServers] = new WebServer(name);
+                V[NumServers].E.Add(false);  // Add a new connection (false means no connection)
+                V[NumServers].E[j] = true;   // Connect to the existing server
+                NumServers++;
+
+                // Print the name of the added server
+                Console.WriteLine("Added server: " + name);
+
                 return true;
             }
+            else
+            {
+                Console.WriteLine("Server already exists.");
+            }
         }
-        Console.WriteLine("no server ");
+        else
+        {
+            Console.WriteLine("The other server does not exist.");
+        }
+
         return false;
     }
 
+
+
+
     public bool AddWebPage(WebPage w, string name)
     {
-        int i;
+        int i = FindServer(name);
 
-        if ((i = FindServer(name)) > -1)
+        if (i > -1)
         {
             V[i].P.Add(w);
+            NumServers++;
             return true;
         }
         return false;
@@ -85,26 +118,26 @@ public class ServerGraph : WebGraph
 
     public bool RemoveServer(string name, string other)
     {
-        int i;
+        int i = FindServer(name);
         int j = FindServer(other);
 
-        if ((i = FindServer(name)) > -1)
+        if (i == -1 || j == -1)
+            return false;
+
+        for (int s = 0; s < NumServers; s++)
         {
-            for (int s = 0; s < NumServers; s++)
+            if (s != i)
             {
-                if (s != i)
+                if (V[i].E[s])
                 {
-                    if (V[i].E[s])
+                    V[j].E[s] = true;
+                    if (V[s].E[i])
                     {
-                        V[j].E[s] = true;
-                        if (V[s].E[i])
-                        {
-                            V[s].E[j] = true;
-                        }
+                        V[s].E[j] = true;
                     }
-                    NumServers--;
-                    return true;
                 }
+                NumServers--;
+                return true;
             }
         }
         return false;
@@ -112,14 +145,8 @@ public class ServerGraph : WebGraph
 
     public bool AddConnection(string from, string to)
     {
-
-        //FInd server method has some issue needs to be taken a look
         int indexOfFrom = FindServer(from);
         int indexOfTo = FindServer(to);
-
-        // Debugging statements to check the indices      
-        Console.WriteLine("Index of from: " + indexOfFrom);
-        Console.WriteLine("Index of to: " + indexOfTo);
 
         if (indexOfFrom != -1 && indexOfTo != -1)
         {
@@ -129,18 +156,51 @@ public class ServerGraph : WebGraph
         return false;
     }
 
-
-
     public string[] CriticalServers()
     {
         string[] arr = { "hello world" };
-
         return arr;
     }
 
     public int ShortestPath(string from, string to)
     {
-        return 0;
+        int fromIndex = FindServer(from);
+        int toIndex = FindServer(to);
+
+        if (fromIndex == -1 || toIndex == -1)
+        {
+            Console.WriteLine("Server not found.");
+            return -1;
+        }
+
+        Queue<WebServer> queue = new Queue<WebServer>();
+        bool[] visited = new bool[NumServers];
+        int[] distances = new int[NumServers];
+
+        queue.Enqueue(V[fromIndex]);
+        visited[fromIndex] = true;
+        distances[fromIndex] = 0;
+
+        while (queue.Count > 0)
+        {
+            WebServer currentServer = queue.Dequeue();
+
+            if (currentServer == V[toIndex])
+                return distances[FindServer(currentServer.Name)];
+
+            for (int i = 0; i < NumServers; i++)
+            {
+                if (currentServer.E[i] && !visited[i])
+                {
+                    queue.Enqueue(V[i]);
+                    visited[i] = true;
+                    distances[i] = distances[FindServer(currentServer.Name)] + 1;
+                }
+            }
+        }
+
+        Console.WriteLine("No path found.");
+        return -1;
     }
 
     public new void PrintGraph()
@@ -155,103 +215,59 @@ public class ServerGraph : WebGraph
         }
     }
 
-
-
-}
-
-class Program
-{
-     static void Main()
+    static void Main()
     {
-
-        while(true){
+        while (true)
+        {
             ServerGraph serverGraph = new ServerGraph();
             WebGraph webGraph = new WebGraph();
-            
-           
-             Console.WriteLine("\n1: Add Server ");
-             Console.WriteLine("2: Add Page ");
-             Console.WriteLine("3: Add connection ");
-             Console.WriteLine("exit: type [exit] to close the application ");
 
-             for(int i =0; i<36; i++){
+            Console.WriteLine("\n1: Add Server ");
+            Console.WriteLine("2: Add Page ");
+            Console.WriteLine("3: Add connection ");
+            Console.WriteLine("exit: type [exit] to close the application ");
+
+            for (int i = 0; i < 36; i++)
+            {
                 Console.Write("-");
-             }
+            }
 
             Console.WriteLine("\ntype the opertaion you would like to perform ");
             string input = Console.ReadLine();
 
-             
-             
-
- switch(input){
-        case "1":
-            Console.WriteLine("Enter 1st server name: ");
-            string server1 = Console.ReadLine();
-            Console.WriteLine("Enter 2nd server name: ");
-            string server2 = Console.ReadLine();
-            Console.WriteLine("\nResult:");
-            serverGraph.AddServer(server1, server2);
-
-            break;
-        case "2":
-            Console.WriteLine("Enter your website name: ");
-            string websiteName = Console.ReadLine();
-            Console.WriteLine("Enter the server you want to host your webiste at: ");
-            string hostingServer = Console.ReadLine();
-            Console.WriteLine("\nResult: ");
-            WebPage page = new WebPage(websiteName, hostingServer);
-
-            break;
-
-        case "3":
-            Console.WriteLine("Enter 1st server name to connect from: ");
-            string serverFrom = Console.ReadLine();
-            Console.WriteLine("Enter 2nd server name to connect to: ");
-            string serverTo = Console.ReadLine();
-            Console.WriteLine("\nResult:");
-            serverGraph.AddServer(serverFrom, serverTo);
-
-            break;
-        
-        case "exit":
-             
-             Environment.Exit(0);
-            break;
-
-  default:
-    Console.WriteLine("'Oops you were close bud, try again!'");
-    // code block
-    break;
-}
-
+            switch (input)
+            {
+                case "1":
+                    Console.WriteLine("Enter 1st server name: ");
+                    string server1 = Console.ReadLine();
+                    Console.WriteLine("Enter 2nd server name: ");
+                    string server2 = Console.ReadLine();
+                    Console.WriteLine("\nResult:");
+                    serverGraph.AddServer(server1, server2);
+                    break;
+                case "2":
+                    Console.WriteLine("Enter your website name: ");
+                    string websiteName = Console.ReadLine();
+                    Console.WriteLine("Enter the server you want to host your webiste at: ");
+                    string hostingServer = Console.ReadLine();
+                    Console.WriteLine("\nResult: ");
+                    WebPage page = new WebPage(websiteName, hostingServer);
+                    break;
+                case "3":
+                    Console.WriteLine("Enter 1st server name to connect from: ");
+                    string serverFrom = Console.ReadLine();
+                    Console.WriteLine("Enter 2nd server name to connect to: ");
+                    string serverTo = Console.ReadLine();
+                    Console.WriteLine("\nResult:");
+                    serverGraph.AddServer(serverFrom, serverTo);
+                    break;
+                case "exit":
+                    Environment.Exit(0);
+                    break;
+                default:
+                    Console.WriteLine("'Oops you were close bud, try again!'");
+                    break;
+            }
         }
-        // Step 1: Instantiate a server graph and a web graph
-        
-
-        // Step 2: Add three servers
-        
-        // serverGraph.AddServer("Server2", "Server1");
-        // serverGraph.AddServer("Server3", "Server2");
-
-        // // 2. Add webpages
-        // WebPage page1 = new WebPage("facebook", "server2");
-        // WebPage page2 = new WebPage("Page2", "Server3");
-        // WebPage page3 = new WebPage("Page3", "Server4");
-        // WebPage page4 = new WebPage("Page4", "Server5");
-
-
-
-        // Console.WriteLine(serverGraph.AddConnection("Server1", "Server2"));
-        // serverGraph.AddConnection("Server1", "Server2");
-
-
-
-
-
-        // webGraph.PrintGraph();
-
     }
-
 }
-
