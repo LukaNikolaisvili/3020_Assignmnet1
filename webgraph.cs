@@ -9,9 +9,9 @@ public class WebPage
 
     public WebPage(string name, string host)
     {
-        Name = name; 
-        Server = host; 
-        Console.WriteLine(name + " and the host is " + host); 
+        Name = name;
+        Server = host;
+        Console.WriteLine(name + " and the host is " + host);
     }
 
     public int FindLink(string name)
@@ -26,13 +26,22 @@ public class WebGraph
 
     public WebGraph()
     {
-        P = new List<WebPage>(); 
+        P = new List<WebPage>();
     }
 
+    // 2 marks
+    // Return the index of the webpage with the given name; otherwise return -1
     private int FindPage(string name)
     {
-        return 10;
+
+        for (int i = 0; i < P.count; i++)
+        {
+            if (P[i].Name == name)
+                return 1;
+        }
+        return -1;
     }
+
 
     public bool AddPage(string name, string host, ServerGraph S)
     {
