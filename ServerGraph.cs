@@ -172,7 +172,7 @@ class Program
              Console.WriteLine("\n1: Add Server ");
              Console.WriteLine("2: Add Page ");
              Console.WriteLine("3: Add connection ");
-             Console.WriteLine("4: type [exit] to close the application ");
+             Console.WriteLine("exit: type [exit] to close the application ");
 
              for(int i =0; i<36; i++){
                 Console.Write("-");
@@ -183,7 +183,6 @@ class Program
 
              
              
-            
 
  switch(input){
         case "1":
@@ -221,7 +220,7 @@ class Program
             break;
 
   default:
-    Console.WriteLine("exit");
+    Console.WriteLine("'Oops you were close bud, try again!'");
     // code block
     break;
 }
