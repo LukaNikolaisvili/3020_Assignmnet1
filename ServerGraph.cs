@@ -79,7 +79,8 @@ public class ServerGraph : WebGraph
                 // Add the new server and connect it to the existing server
                 V[NumServers] = new WebServer(name);
                 V[NumServers].E.Add(false);  // Add a new connection (false means no connection)
-                V[NumServers].E[j] = true;   // Connect to the existing server
+                V[NumServers].E[j] = true;
+              
                 NumServers++;
 
                 // Print the name of the added server
@@ -218,32 +219,32 @@ public class ServerGraph : WebGraph
 
     static void Main()
     {
-        ServerGraph gp = new ServerGraph();
-        gp.AddServer("server1", "hi");
+        // ServerGraph gp = new ServerGraph();
+        // gp.AddServer("server1", "hi");
 
-        WebPage pages = new WebPage("facebook", "server1");
-        //   gp.AddPage("facebook","server1",gp);
+        // WebPage pages = new WebPage("facebook", "server1");
+        // //   gp.AddPage("facebook","server1",gp);
 
-        Console.WriteLine(gp.V.Length); //before the method 
-        gp.DoubleCapacity();
-        Console.WriteLine(gp.V.Length); //after 
-        gp.PrintGraph();
-        gp.DoubleCapacity();
-        gp.DoubleCapacity();
-        gp.DoubleCapacity();
-        Console.WriteLine(gp.V.Length);
+        // Console.WriteLine(gp.V.Length); //before the method 
+        // gp.DoubleCapacity();
+        // Console.WriteLine(gp.V.Length); //after 
+        // gp.PrintGraph();
+        // gp.DoubleCapacity();
+        // gp.DoubleCapacity();
+        // gp.DoubleCapacity();
+        // Console.WriteLine(gp.V.Length);
 
 
- ServerGraph serverGraph = new ServerGraph();
- WebGraph webGraph = new WebGraph();
- 
+        ServerGraph serverGraph = new ServerGraph();
+        WebGraph webGraph = new WebGraph();
+
         while (true)
         {
-           
+
 
             Console.WriteLine("\n1: Add Server ");
             Console.WriteLine("2: Add Page ");
-            Console.WriteLine("3: Add connection ");
+            Console.WriteLine("3: Find shortest Path");
             Console.WriteLine("4: double the capacity ");
             Console.WriteLine("5: Print the graph ");
             Console.WriteLine("exit: type [exit] to close the application ");
@@ -264,6 +265,7 @@ public class ServerGraph : WebGraph
                 string server2 = Console.ReadLine();
                 Console.WriteLine("\nResult:");
                 serverGraph.AddServer(server1, server2);
+                
             }
 
             else if (input == "2")
@@ -276,16 +278,15 @@ public class ServerGraph : WebGraph
                 WebPage page = new WebPage(websiteName, hostingServer);
             }
             else if (input == "3")
-            {
-
-                Console.WriteLine("Enter 1st server name to connect from: ");
-                string serverFrom = Console.ReadLine();
-                Console.WriteLine("Enter 2nd server name to connect to: ");
-                string serverTo = Console.ReadLine();
-                Console.WriteLine("\nResult:");
-                serverGraph.AddServer(serverFrom, serverTo);
+            {   
+                Console.WriteLine("Enter starting server: ");
+                string startingServer = Console.ReadLine();
+                Console.WriteLine("Enter the server you want to get to: ");
+                string serverToGetTo = Console.ReadLine();
+                Console.WriteLine("\nResult: ");
+                Console.WriteLine(serverGraph.ShortestPath(startingServer,serverToGetTo));
+                
             }
-
             else if (input == "4")
             {
 
@@ -308,19 +309,19 @@ public class ServerGraph : WebGraph
 
             else if (input == "exit")
             {
-                
+
                 Environment.Exit(0);
-                    
-            }
-
-
-               else
-                {
-                    Console.WriteLine("'Oops you were close bud, try again!'");
-                    break;
-                }
 
             }
+
+
+            else
+            {
+                Console.WriteLine("'Oops you were close bud, try again!'");
+                
+            }
+
         }
     }
+}
 
