@@ -5,7 +5,7 @@ TEAM MEMBERS:
 
 Luka Nikolaisvili - 
 Farzad Imran - 0729901
-Freddrick Nkwonta - 
+Freddrick Nkwonta - 0703772
 
 -----------------
 
@@ -171,91 +171,92 @@ public class ServerGraph : WebGraph
     }
 
     public string[] CriticalServers()
-	{
-		int i;
-		int j = 0;
-		int time = 0;
-		bool[] visited = new bool[NumServers];
-		int[] disc = new int[NumServers];
-		int[] low = new int[NumServers];
-		int[] parent = new int[NumServers];
-		bool[] artipoints = new bool[NumServers]; // To store articulation points
-		string[] result = new string[NumServers]; // To store the resulting string
+    {
+        int i;
+        int j = 0;
+        int time = 0;
+        bool[] visited = new bool[NumServers];
+        int[] disc = new int[NumServers];
+        int[] low = new int[NumServers];
+        int[] parent = new int[NumServers];
+        bool[] artipoints = new bool[NumServers]; // To store articulation points
+        string[] result = new string[NumServers]; // To store the resulting string
 
-		for (i = 0; i < NumServers; i++)     // Set all vertices as unvisited
+        for (i = 0; i < NumServers; i++)     // Set all vertices as unvisited
         {
-			visited[i] = false;
-			artipoints[i] = false;
-			parent[i] = -1;
-		}
+            visited[i] = false;
+            artipoints[i] = false;
+            parent[i] = -1;
+        }
 
 
-		for (i = 0; i < NumServers; i++)
-			if (!visited[i])                  // (Re)start with vertex i
-			{
-				CriticalServers(i, time, visited, disc, low, parent, artipoints);
-				Console.WriteLine();
-			}
+        for (i = 0; i < NumServers; i++)
+            if (!visited[i])                  // (Re)start with vertex i
+            {
+                CriticalServers(i, time, visited, disc, low, parent, artipoints);
+                Console.WriteLine();
+            }
 
-		// Now artipoints[] contains articulation points, print them
-		for (i = 0; i < NumServers; i++)
-		{
-			if (artipoints[i] == true)
-			{
-				Console.Write(i + " ");
-				result[j] = i.ToString();
-				j++;
+        // Now artipoints[] contains articulation points, print them
+        for (i = 0; i < NumServers; i++)
+        {
+            if (artipoints[i] == true)
+            {
+                Console.Write(i + " ");
+                result[j] = i.ToString();
+                j++;
 
-			}
+            }
 
-		}
-		return result;
-	}
+        }
+        return result;
+    }
 
-	private void CriticalServers(int i, int time, bool[] visited, int[] disc, int[] low, int[] parent, bool[] artipoints)
-	{
-		int j;
-		// Count of children in DFS Tree
-		int children = 0;
-		// Sets the discovery and lowest discovery time to the passed time variable.
-		disc[i] = low[i] = ++time;
+    private void CriticalServers(int i, int time, bool[] visited, int[] disc, int[] low, int[] parent, bool[] artipoints)
+    {
+        int j;
+        // Count of children in DFS Tree
+        int children = 0;
+        // Sets the discovery and lowest discovery time to the passed time variable.
+        disc[i] = low[i] = ++time;
 
-		visited[i] = true;    // Output vertex when marked as visited
-		// Console.WriteLine(i);
+        visited[i] = true;    // Output vertex when marked as visited
+                              // Console.WriteLine(i);
 
-		for (j = 0; j < NumServers; j++)   // Visit next unvisited adjacent vertex
-			 if (!visited[j] && !V[i].E[j].Equals(-1)){
-				children++;
-				parent[j] = i;
-				CriticalServers(j, time, visited, disc, low, parent, artipoints);
+        for (j = 0; j < NumServers; j++)   // Visit next unvisited adjacent vertex
+            if (!visited[j] && !V[i].E[j].Equals(-1))
+            {
+                children++;
+                parent[j] = i;
+                CriticalServers(j, time, visited, disc, low, parent, artipoints);
 
-				// Check if the subtree rooted with j has
-				// a connection to one of the ancestors of i
-				low[i] = Math.Min(low[i], low[j]);
+                // Check if the subtree rooted with j has
+                // a connection to one of the ancestors of i
+                low[i] = Math.Min(low[i], low[j]);
 
-				// i is a critical server (articulation point) if any of the following statements hold true:
-				// Case 1:  i is the root of the tree and has 2 or more children
-				if (parent[i] == -1 && children > 1)
-					artipoints[i] = true;
+                // i is a critical server (articulation point) if any of the following statements hold true:
+                // Case 1:  i is the root of the tree and has 2 or more children
+                if (parent[i] == -1 && children > 1)
+                    artipoints[i] = true;
 
-				// Case 2: i isn't a root of the tree, and one of its children have a lowest discovery time 
-				// greater than i's discovery time
-				if (parent[i] != -1 && low[j] >= disc[i])
-					artipoints[i] = true;
-			}
-			// Update low value of i for parent function calls.
-			else if (j != parent[i])
-				low[i] = Math.Min(low[i], disc[j]);
-	}
+                // Case 2: i isn't a root of the tree, and one of its children have a lowest discovery time 
+                // greater than i's discovery time
+                if (parent[i] != -1 && low[j] >= disc[i])
+                    artipoints[i] = true;
+            }
+            // Update low value of i for parent function calls.
+            else if (j != parent[i])
+                low[i] = Math.Min(low[i], disc[j]);
+    }
 
-	   /*		
-	   // Print Method
-        string[] result = gp.CriticalServers();
-		for (int i = 0; i < result.Length; i++)
-		{
-			Console.Write(result[i] + " ");
-		}
-		Console.WriteLine(); */
+    /*		
+    // Print Method
+     string[] result = gp.CriticalServers();
+     for (int i = 0; i < result.Length; i++)
+     {
+         Console.Write(result[i] + " ");
+     }
+     Console.WriteLine(); */
 
 
     public int ShortestPath(string from, string to)

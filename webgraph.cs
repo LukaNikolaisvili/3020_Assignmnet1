@@ -66,8 +66,8 @@ public class WebGraph
         else
         {
             ServerGraph sg = new ServerGraph();
-            
-            sg.AddPage(name,host,S);
+
+            sg.AddPage(name, host, S);
 
 
             WebPage createPage = new WebPage(name, host);
@@ -138,7 +138,16 @@ public class WebGraph
     // Hint: Use the method ShortestPath in the class ServerGraph
     public float AvgShortestPaths(string name, ServerGraph S)
     {
-        return 2;
+        int i = FindPage(name);
+
+        if (i == -1)
+        {
+            console.WriteLine("webpage does not exist.");
+            return -1;
+        }
+
+
+
     }
 
     public void PrintGraph()
