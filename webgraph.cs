@@ -51,6 +51,11 @@ public class WebGraph
         }
         else
         {
+            ServerGraph sg = new ServerGraph();
+            
+            sg.AddPage(name,host,S);
+
+
             WebPage createPage = new WebPage(name, host);
 
             S.P.Add(createPage);

@@ -28,7 +28,7 @@ public class ServerGraph : WebGraph
         // NumServers = 0;
 
 
-        V = new WebServer[3]; // Increase the capacity to accommodate "hi"
+        V = new WebServer[1]; // Increase the capacity to accommodate "hi"
         NumServers = 1; // Start with 1 server ("hi" server)
 
         // Add the "hi" server
@@ -208,15 +208,33 @@ public class ServerGraph : WebGraph
         for (int i = 0; i < NumServers; i++)
         {
             Console.WriteLine(V[i].Name);
-            for (int j = 0; j < NumServers; j++)
+            for (int j = 0; j < V[i].E.Count; j++)
             {
-                Console.WriteLine("(" + V[i].Name + "," + V[i].E[j] + "," + V[i].P + ")");
+                
+                Console.WriteLine("(" + V[i].Name + "," + V[i].E[j] + "," + V[j].P.ToArray() +")");
             }
         }
     }
 
     static void Main()
     {
+      ServerGraph gp = new ServerGraph();
+      gp.AddServer("server1", "hi");
+
+      WebPage pages = new WebPage("facebook", "server1");
+    //   gp.AddPage("facebook","server1",gp);
+    
+    Console.WriteLine(gp.V.Length); //before the method 
+    gp.DoubleCapacity(); 
+    Console.WriteLine(gp.V.Length); //after 
+    gp.PrintGraph();
+     gp.DoubleCapacity(); 
+      gp.DoubleCapacity(); 
+       gp.DoubleCapacity(); 
+        Console.WriteLine(gp.V.Length);
+
+
+
         while (true)
         {
             ServerGraph serverGraph = new ServerGraph();
@@ -225,6 +243,8 @@ public class ServerGraph : WebGraph
             Console.WriteLine("\n1: Add Server ");
             Console.WriteLine("2: Add Page ");
             Console.WriteLine("3: Add connection ");
+            Console.WriteLine("4: double the capacity ");
+            Console.WriteLine("5: Print the graph ");
             Console.WriteLine("exit: type [exit] to close the application ");
 
             for (int i = 0; i < 36; i++)
@@ -261,9 +281,27 @@ public class ServerGraph : WebGraph
                     Console.WriteLine("\nResult:");
                     serverGraph.AddServer(serverFrom, serverTo);
                     break;
+                
+                case "4":
+                     int oldCapacity = serverGraph.V.Length;
+                     serverGraph.DoubleCapacity(); 
+                     int newCapacity = serverGraph.V.Length;
+                     
+                     Console.WriteLine("server capacifty incresed from " + oldCapacity + " to " + newCapacity);
+                     break;
+
+                case "5":
+                    Console.WriteLine("Printing graph...\n");
+                    serverGraph.PrintGraph();
+
+                break;
+
                 case "exit":
                     Environment.Exit(0);
                     break;
+
+
+
                 default:
                     Console.WriteLine("'Oops you were close bud, try again!'");
                     break;
