@@ -74,12 +74,13 @@ public class WebGraph
     }
 
     public bool AddLink(string from, string to)
-    {   
+    {
 
         int indexFrom = FindPage(from);
         int indexTo = FindPage(to);
 
-        if(indexFrom != -1 && indexTo != -1){
+        if (indexFrom != -1 && indexTo != -1)
+        {
             P[indexFrom].E.Add(P[indexTo]);
 
             return true;
@@ -95,21 +96,27 @@ public class WebGraph
         int indexFrom = FindPage(from);
         int indexTo = FindPage(to);
 
-        if(indexFrom != -1 && indexTo != 1){
-             
-             
-             if(P[indexFrom].E.Contains(P[indexTo])){
+        if (indexFrom != -1 && indexTo != 1)
+        {
+
+
+            if (P[indexFrom].E.Contains(P[indexTo]))
+            {
 
                 P[indexFrom].E.Remove(P[indexTo]);
 
                 return true;
-             }
+            }
         }
 
         return false;
-    
+
     }
 
+    // 6 marks
+    // Return the average length of the shortest paths from the webpage with
+    // given name to each of its hyperlinks
+    // Hint: Use the method ShortestPath in the class ServerGraph
     public float AvgShortestPaths(string name, ServerGraph S)
     {
         return 2;
