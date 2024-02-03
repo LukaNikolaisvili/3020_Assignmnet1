@@ -5,7 +5,7 @@ TEAM MEMBERS:
 
 Luka Nikolaisvili - 0674677
 Farzad Imran - 0729901
-Freddrick Nkwonta - 
+Freddrick Nkwonta - 0703772
 
 -----------------
 
@@ -136,21 +136,22 @@ public class WebGraph
     // Return the average length of the shortest paths from the webpage with
     // given name to each of its hyperlinks
     // Hint: Use the method ShortestPath in the class ServerGraph
-    public float AvgShortestPaths(string name, ServerGraph S)
-    {
-        int i = FindPage(name);
 
-        if (i == -1)
-        {
-            console.WriteLine("webpage does not exist.");
-            return -1;
-        }
+    // public float AvgShortestPaths(string name, ServerGraph S)
+    // {
+    //     int i = FindPage(name);
+
+    //     if (i == -1)
+    //     {
+    //         console.WriteLine("webpage does not exist.");
+    //         return -1;
+    //     }
 
         WebPage webPage = P[i];
 
 
 
-    }
+    // }
 
     public void PrintGraph()
     {
