@@ -26,6 +26,8 @@ public class WebPage
         Name = name;
         Server = host;
         Console.WriteLine(name + " is hosted on " + host);
+        E = new List<WebPage>();
+        
     }
 
     public int FindLink(string name)
@@ -58,26 +60,20 @@ public class WebGraph
 
 
     public bool AddPage(string name, string host, ServerGraph S)
+{
+    if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(host) || S == null)
     {
-        if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(host) || S == null)
-        {
-            return false;
-        }
-        else
-        {
-            ServerGraph sg = new ServerGraph();
-
-            sg.AddPage(name, host, S);
-
-
-            WebPage createPage = new WebPage(name, host);
-
-            S.P.Add(createPage);
-
-            return true;
-
-        }
+        return false;
     }
+    else
+    {
+        WebPage createPage = new WebPage(name, host);
+        S.P.Add(createPage); 
+
+        return true;
+    }
+}
+
 
     public bool RemovePage(string name, ServerGraph S)
     {
@@ -85,10 +81,11 @@ public class WebGraph
         int id = FindPage(name);
         if (id != -1)
         {
+            Console.WriteLine("Page was found and its removed: ");
             S.P.RemoveAt(id);
             return true;
         }
-
+        Console.WriteLine("Page with that name is not found, try again. ");
         return false;
     }
 
