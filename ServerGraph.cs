@@ -210,35 +210,36 @@ public class ServerGraph : WebGraph
             Console.WriteLine(V[i].Name);
             for (int j = 0; j < V[i].E.Count; j++)
             {
-                
-                Console.WriteLine("(" + V[i].Name + "," + V[i].E[j] + "," + V[j].P.ToArray() +")");
+
+                Console.WriteLine("(" + V[i].Name + "," + V[i].E[j] + "," + V[j].P.ToArray().ToString() + ")");
             }
         }
     }
 
     static void Main()
     {
-      ServerGraph gp = new ServerGraph();
-      gp.AddServer("server1", "hi");
+        ServerGraph gp = new ServerGraph();
+        gp.AddServer("server1", "hi");
 
-      WebPage pages = new WebPage("facebook", "server1");
-    //   gp.AddPage("facebook","server1",gp);
-    
-    Console.WriteLine(gp.V.Length); //before the method 
-    gp.DoubleCapacity(); 
-    Console.WriteLine(gp.V.Length); //after 
-    gp.PrintGraph();
-     gp.DoubleCapacity(); 
-      gp.DoubleCapacity(); 
-       gp.DoubleCapacity(); 
+        WebPage pages = new WebPage("facebook", "server1");
+        //   gp.AddPage("facebook","server1",gp);
+
+        Console.WriteLine(gp.V.Length); //before the method 
+        gp.DoubleCapacity();
+        Console.WriteLine(gp.V.Length); //after 
+        gp.PrintGraph();
+        gp.DoubleCapacity();
+        gp.DoubleCapacity();
+        gp.DoubleCapacity();
         Console.WriteLine(gp.V.Length);
 
 
-
+ ServerGraph serverGraph = new ServerGraph();
+ WebGraph webGraph = new WebGraph();
+ 
         while (true)
         {
-            ServerGraph serverGraph = new ServerGraph();
-            WebGraph webGraph = new WebGraph();
+           
 
             Console.WriteLine("\n1: Add Server ");
             Console.WriteLine("2: Add Page ");
@@ -255,57 +256,71 @@ public class ServerGraph : WebGraph
             Console.WriteLine("\ntype the opertaion you would like to perform ");
             string input = Console.ReadLine();
 
-            switch (input)
+            if (input == "1")
             {
-                case "1":
-                    Console.WriteLine("Enter 1st server name: ");
-                    string server1 = Console.ReadLine();
-                    Console.WriteLine("Enter 2nd server name: ");
-                    string server2 = Console.ReadLine();
-                    Console.WriteLine("\nResult:");
-                    serverGraph.AddServer(server1, server2);
-                    break;
-                case "2":
-                    Console.WriteLine("Enter your website name: ");
-                    string websiteName = Console.ReadLine();
-                    Console.WriteLine("Enter the server you want to host your webiste at: ");
-                    string hostingServer = Console.ReadLine();
-                    Console.WriteLine("\nResult: ");
-                    WebPage page = new WebPage(websiteName, hostingServer);
-                    break;
-                case "3":
-                    Console.WriteLine("Enter 1st server name to connect from: ");
-                    string serverFrom = Console.ReadLine();
-                    Console.WriteLine("Enter 2nd server name to connect to: ");
-                    string serverTo = Console.ReadLine();
-                    Console.WriteLine("\nResult:");
-                    serverGraph.AddServer(serverFrom, serverTo);
-                    break;
+                Console.WriteLine("Enter 1st server name: ");
+                string server1 = Console.ReadLine();
+                Console.WriteLine("Enter 2nd server name: ");
+                string server2 = Console.ReadLine();
+                Console.WriteLine("\nResult:");
+                serverGraph.AddServer(server1, server2);
+            }
+
+            else if (input == "2")
+            {
+                Console.WriteLine("Enter your website name: ");
+                string websiteName = Console.ReadLine();
+                Console.WriteLine("Enter the server you want to host your webiste at: ");
+                string hostingServer = Console.ReadLine();
+                Console.WriteLine("\nResult: ");
+                WebPage page = new WebPage(websiteName, hostingServer);
+            }
+            else if (input == "3")
+            {
+
+                Console.WriteLine("Enter 1st server name to connect from: ");
+                string serverFrom = Console.ReadLine();
+                Console.WriteLine("Enter 2nd server name to connect to: ");
+                string serverTo = Console.ReadLine();
+                Console.WriteLine("\nResult:");
+                serverGraph.AddServer(serverFrom, serverTo);
+            }
+
+            else if (input == "4")
+            {
+
+
+                int oldCapacity = serverGraph.V.Length;
+                serverGraph.DoubleCapacity();
+                int newCapacity = serverGraph.V.Length;
+
+                Console.WriteLine("server capacifty incresed from " + oldCapacity + " to " + newCapacity);
+            }
+
+            else if (input == "5")
+            {
+
+
+                Console.WriteLine("Printing graph...\n");
+                serverGraph.PrintGraph();
+
+            }
+
+            else if (input == "exit")
+            {
                 
-                case "4":
-                     int oldCapacity = serverGraph.V.Length;
-                     serverGraph.DoubleCapacity(); 
-                     int newCapacity = serverGraph.V.Length;
-                     
-                     Console.WriteLine("server capacifty incresed from " + oldCapacity + " to " + newCapacity);
-                     break;
-
-                case "5":
-                    Console.WriteLine("Printing graph...\n");
-                    serverGraph.PrintGraph();
-
-                break;
-
-                case "exit":
-                    Environment.Exit(0);
-                    break;
+                Environment.Exit(0);
+                    
+            }
 
 
-
-                default:
+               else
+                {
                     Console.WriteLine("'Oops you were close bud, try again!'");
                     break;
+                }
+
             }
         }
     }
-}
+
