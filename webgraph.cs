@@ -4,7 +4,7 @@ ASSIGNMENT#1 - COIS-3020
 TEAM MEMBERS:
 
 Luka Nikolaisvili - 0674677
-Farzad Aimran - 
+Farzad Imran - 0729901
 Freddrick Nkwonta - 
 
 -----------------
