@@ -1,3 +1,17 @@
+/*
+ASSIGNMENT#1 - COIS-3020
+
+TEAM MEMBERS:
+
+Luka Nikolaisvili - 0674677
+Farzad Aimran - 
+Freddrick Nkwonta - 
+
+-----------------
+
+*/
+
+
 using System;
 using System.Collections.Generic;
 

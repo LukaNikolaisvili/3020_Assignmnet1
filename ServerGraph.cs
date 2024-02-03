@@ -1,3 +1,16 @@
+/*
+ASSIGNMENT#1 - COIS-3020
+
+TEAM MEMBERS:
+
+Luka Nikolaisvili - 
+Farzad Aimran - 
+Freddrick Nkwonta - 
+
+-----------------
+
+*/
+
 using System.Linq.Expressions;
 
 using System;
@@ -32,7 +45,7 @@ public class ServerGraph : WebGraph
         NumServers = 1; // Start with 1 server ("hi" server)
 
         // Add the "hi" server
-        V[0] = new WebServer("hi");
+        V[0] = new WebServer("root");
         V[0].E.Add(false); // "hi" server has no connections initially
     }
 
@@ -80,7 +93,7 @@ public class ServerGraph : WebGraph
                 V[NumServers] = new WebServer(name);
                 V[NumServers].E.Add(false);  // Add a new connection (false means no connection)
                 V[NumServers].E[j] = true;
-              
+
                 NumServers++;
 
                 // Print the name of the added server
@@ -157,83 +170,93 @@ public class ServerGraph : WebGraph
         return false;
     }
 
-// Code Block to work on
+    public string[] CriticalServers()
+	{
+		int i;
+		int j = 0;
+		int time = 0;
+		bool[] visited = new bool[NumServers];
+		int[] disc = new int[NumServers];
+		int[] low = new int[NumServers];
+		int[] parent = new int[NumServers];
+		bool[] artipoints = new bool[NumServers]; // To store articulation points
+		string[] result = new string[NumServers]; // To store the resulting string
 
-   public string[] CriticalServers()
+		for (i = 0; i < NumServers; i++)     // Set all vertices as unvisited
         {
-            int i;
-			int j = 0;
-			int time = 0;
-            bool[] visited = new bool[NumServers];
-			int[] disc = new int[NumServers];
-			int[] low = new int[NumServers];
-			int[] parent = new int[NumServers];
-			bool[] artipoints = new bool[NumServers]; // To store articulation points
-			string[] result = new string[NumServers]; // To store the resulting string
+			visited[i] = false;
+			artipoints[i] = false;
+			parent[i] = -1;
+		}
 
-            for (i = 0; i < NumServers; i++)     // Set all vertices as unvisited
-                visited[i] = false;
-				artipoints[i] = false;
-				parent[i] = -1;
 
-            for (i = 0; i < NumServers; i++)
-                if (!visited[i])                  // (Re)start with vertex i
-                {
-                    CriticalServers(i, time, visited, disc, low, parent, artipoints);
-                    Console.WriteLine();
-                }
-
-			// Now artipoints[] contains articulation points, print them
-			for (int i = 0; i < V; i++)
+		for (i = 0; i < NumServers; i++)
+			if (!visited[i])                  // (Re)start with vertex i
 			{
-				if (artipoints[i] == true)
-				{
-					Console.Write(i + " ");
-					result[j] = i.ToString();
-					j++;
+				CriticalServers(i, time, visited, disc, low, parent, artipoints);
+				Console.WriteLine();
+			}
 
-				}
+		// Now artipoints[] contains articulation points, print them
+		for (i = 0; i < NumServers; i++)
+		{
+			if (artipoints[i] == true)
+			{
+				Console.Write(i + " ");
+				result[j] = i.ToString();
+				j++;
 
 			}
-			return result;
-        }
 
-        private void CriticalServers(int i, int time, bool[] visited, int[] disc, int[] low, int[] parent, bool[] artipoints)
-        {
-            int j;
-			// Count of children in DFS Tree
-			int children = 0;
-			// Sets the discovery and lowest discovery time to the passed time variable.
-			disc[i] = low[i] = ++time;
+		}
+		return result;
+	}
 
-            visited[i] = true;    // Output vertex when marked as visited
-            Console.WriteLine(i);
+	private void CriticalServers(int i, int time, bool[] visited, int[] disc, int[] low, int[] parent, bool[] artipoints)
+	{
+		int j;
+		// Count of children in DFS Tree
+		int children = 0;
+		// Sets the discovery and lowest discovery time to the passed time variable.
+		disc[i] = low[i] = ++time;
 
-            for (j = 0; j < NumServers; j++)    // Visit next unvisited adjacent vertex
-                if (!visited[j] && E[i, j] > -1) 
-					{
-						children++;
-						parent[j] = i;
-						CriticalServers(j, time, visited, disc, low, parent, artipoints);
+		visited[i] = true;    // Output vertex when marked as visited
+		// Console.WriteLine(i);
 
-						// Check if the subtree rooted with j has
-						// a connection to one of the ancestors of i
-						low[i] = Math.Min(low[i], low[j]);
+		for (j = 0; j < NumServers; j++)   // Visit next unvisited adjacent vertex
+			 if (!visited[j] && !V[i].E[j].Equals(-1)){
+				children++;
+				parent[j] = i;
+				CriticalServers(j, time, visited, disc, low, parent, artipoints);
 
-						// i is a critical server (articulation point) if any of the following statements hold true:
-						// Case 1:  i is the root of the tree and has 2 or more children
-						if (parent[i] == -1 && children > 1)
-							ap[i] = true;
+				// Check if the subtree rooted with j has
+				// a connection to one of the ancestors of i
+				low[i] = Math.Min(low[i], low[j]);
 
-						// Case 2: i isn't a root of the tree, and one of its children have a lowest discovery time 
-						// greater than i's discovery time
-						if (parent[i] != -1 && low[j] >= disc[i])
-							ap[i] = true;
-					}
-					// Update low value of i for parent function calls.
-					else if (j != parent[i])
-						low[i] = Math.Min(low[i], disc[j]);
-        }
+				// i is a critical server (articulation point) if any of the following statements hold true:
+				// Case 1:  i is the root of the tree and has 2 or more children
+				if (parent[i] == -1 && children > 1)
+					artipoints[i] = true;
+
+				// Case 2: i isn't a root of the tree, and one of its children have a lowest discovery time 
+				// greater than i's discovery time
+				if (parent[i] != -1 && low[j] >= disc[i])
+					artipoints[i] = true;
+			}
+			// Update low value of i for parent function calls.
+			else if (j != parent[i])
+				low[i] = Math.Min(low[i], disc[j]);
+	}
+
+	   /*		
+	   // Print Method
+        string[] result = gp.CriticalServers();
+		for (int i = 0; i < result.Length; i++)
+		{
+			Console.Write(result[i] + " ");
+		}
+		Console.WriteLine(); */
+
 
     public int ShortestPath(string from, string to)
     {
@@ -291,21 +314,22 @@ public class ServerGraph : WebGraph
 
     static void Main()
     {
-        // ServerGraph gp = new ServerGraph();
-        // gp.AddServer("server1", "hi");
 
-        // WebPage pages = new WebPage("facebook", "server1");
-        // //   gp.AddPage("facebook","server1",gp);
 
-        // Console.WriteLine(gp.V.Length); //before the method 
-        // gp.DoubleCapacity();
-        // Console.WriteLine(gp.V.Length); //after 
-        // gp.PrintGraph();
-        // gp.DoubleCapacity();
-        // gp.DoubleCapacity();
-        // gp.DoubleCapacity();
-        // Console.WriteLine(gp.V.Length);
+        ServerGraph gp = new ServerGraph();
+        gp.AddServer("server1", "hi");
 
+        WebPage pages = new WebPage("facebook", "server1");
+        //   gp.AddPage("facebook","server1",gp);
+
+        Console.WriteLine(gp.V.Length); //before the method 
+        gp.DoubleCapacity();
+        Console.WriteLine(gp.V.Length); //after 
+        gp.PrintGraph();
+        gp.DoubleCapacity();
+        gp.DoubleCapacity();
+        gp.DoubleCapacity();
+        Console.WriteLine(gp.V.Length);
 
         ServerGraph serverGraph = new ServerGraph();
         WebGraph webGraph = new WebGraph();
@@ -319,6 +343,7 @@ public class ServerGraph : WebGraph
             Console.WriteLine("3: Find shortest Path");
             Console.WriteLine("4: double the capacity ");
             Console.WriteLine("5: Print the graph ");
+            Console.WriteLine("6: Locate the Critical servers ");
             Console.WriteLine("exit: type [exit] to close the application ");
 
             for (int i = 0; i < 36; i++)
@@ -337,7 +362,7 @@ public class ServerGraph : WebGraph
                 string server2 = Console.ReadLine();
                 Console.WriteLine("\nResult:");
                 serverGraph.AddServer(server1, server2);
-                
+
             }
 
             else if (input == "2")
@@ -350,14 +375,14 @@ public class ServerGraph : WebGraph
                 WebPage page = new WebPage(websiteName, hostingServer);
             }
             else if (input == "3")
-            {   
+            {
                 Console.WriteLine("Enter starting server: ");
                 string startingServer = Console.ReadLine();
                 Console.WriteLine("Enter the server you want to get to: ");
                 string serverToGetTo = Console.ReadLine();
                 Console.WriteLine("\nResult: ");
-                Console.WriteLine(serverGraph.ShortestPath(startingServer,serverToGetTo));
-                
+                Console.WriteLine(serverGraph.ShortestPath(startingServer, serverToGetTo));
+
             }
             else if (input == "4")
             {
@@ -379,6 +404,15 @@ public class ServerGraph : WebGraph
 
             }
 
+            else if (input == "6")
+            {
+                string[] result3 = gp.CriticalServers();
+                for (int i = 0; i < result3.Length; i++)
+                {
+                    Console.Write(result3[i] + " ");
+                }
+            }
+
             else if (input == "exit")
             {
 
@@ -390,7 +424,7 @@ public class ServerGraph : WebGraph
             else
             {
                 Console.WriteLine("'Oops you were close bud, try again!'");
-                
+
             }
 
         }
