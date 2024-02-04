@@ -13,6 +13,7 @@ Freddrick Nkwonta - 0703772
 
 using System;
 using System.Collections.Generic;
+using System.Formats.Tar;
 
 public class WebPage
 {
@@ -31,7 +32,16 @@ public class WebPage
 
     public int FindLink(string name)
     {
-        return 1;
+        foreach (var item in E)
+        {
+            if (name.Equals(item.Name))
+            { 
+                return 1;
+            }
+        }
+
+        //There is no such link
+        return -1;
     }
 }
 
@@ -188,7 +198,9 @@ public class WebGraph
     {
         foreach (WebPage page in P)
         {
+            Console.WriteLine("Printing the Page ");
             Console.WriteLine(page.Name);
+            Console.WriteLine(page.FindLink(page.Name));
         }
 
     }

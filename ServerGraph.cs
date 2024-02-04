@@ -15,6 +15,7 @@ using System.Linq.Expressions;
 
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 
 public class ServerGraph : WebGraph
 {
@@ -450,6 +451,7 @@ public class ServerGraph : WebGraph
 
                 Console.WriteLine("Printing graph...\n");
                 serverGraph.PrintGraph();
+                webGraph.PrintGraph();
 
             }
 
