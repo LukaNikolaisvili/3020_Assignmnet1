@@ -134,8 +134,8 @@ public class WebGraph
     // given name to each of its hyperlinks
     // Hint: Use the method ShortestPath in the class ServerGraph
 
-    // public float AvgShortestPaths(string name, ServerGraph S)
-    // {
+    public float AvgShortestPaths(string name, ServerGraph S)
+    {
     //     int i = FindPage(name);
 
     //     if (i == -1)
@@ -144,11 +144,13 @@ public class WebGraph
     //         return -1;
     //     }
 
-        WebPage webPage = P[i];
+        // WebPage webPage = P[i];
+
+        return -1;
 
 
 
-    // }
+    }
 
     public void PrintGraph()
     {

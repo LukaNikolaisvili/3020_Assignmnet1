@@ -18,6 +18,7 @@ using System.Collections.Generic;
 
 public class ServerGraph : WebGraph
 {
+    // 3 marks
     private class WebServer
     {
         public string Name;
@@ -30,153 +31,193 @@ public class ServerGraph : WebGraph
             P = new List<WebPage>();
             E = new List<bool>();
         }
-    }
 
+    }
     private WebServer[] V;
+    private bool[,] E;
     private int NumServers;
-    private bool[] E;
+
 
     public ServerGraph()
     {
-        // V = new WebServer[2];
-        // NumServers = 0;
+
+        V = new WebServer[1];
+        E = new bool[1, 1];
+        NumServers = 0;
 
 
-        V = new WebServer[1]; // Increase the capacity to accommodate "hi"
-        NumServers = 1; // Start with 1 server ("hi" server)
-
-        // Add the "hi" server
-        V[0] = new WebServer("root");
-        V[0].E.Add(false); // "hi" server has no connections initially
     }
-
+    // 2 marks
+    // Return the index of the server with the given name; otherwise return -1
     private int FindServer(string name)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            return -1;
-
         for (int i = 0; i < NumServers; i++)
         {
             if (string.Equals(V[i].Name.Trim(), name.Trim(), StringComparison.OrdinalIgnoreCase))
                 return i;
+
         }
         return -1;
     }
-
+    // 3 marks
+    // Double the capacity of the server graph with the respect to web servers
     private void DoubleCapacity()
     {
-        int newCapacity = V.Length * 2;
-        // int newCapacityOfWebServer = E.Length * 2;
-        Array.Resize(ref V, newCapacity);
-        // Array.Resize(ref E, newCapacityOfWebServer);
-    }
 
-    public void Capacity2()
-    {
-        DoubleCapacity();
-    }
+        int newVLength = V.Length * 2;
+        Array.Resize(ref V, newVLength);
 
+
+        int rowCounter = E.GetLength(0);
+        int columnCounter = E.GetLength(1);
+
+
+        bool[,] doubledMatrix = new bool[rowCounter * 2, columnCounter * 2];
+
+
+        Array.Copy(E, 0, doubledMatrix, 0, rowCounter * columnCounter);
+
+        E = doubledMatrix;
+    }
+    // 3 marks
+    // Add a server with the given name and connect it to the other server
+    // Return true if successful; otherwise return false
     public bool AddServer(string name, string other)
     {
+        if (NumServers == 0)
+        {
+            Console.WriteLine("No servers Exist");
+            Console.WriteLine("Creating new serever called 'Root' ");
+
+            V[NumServers] = new WebServer("Root");
+            E[0, 0] = false;
+            NumServers = NumServers + 1;
+
+            Console.WriteLine("No servers Added ");
+            return false;
+
+        }
+
         int i, j;
 
-        // Check if the other server exists
-        if ((j = FindServer(other)) != -1)
+
+        if (NumServers >= 1)
         {
-            // Check if the server to be added doesn't already exist
-            if ((i = FindServer(name)) == -1)
+
+            if ((j = FindServer(other)) != -1)
             {
-                // Check if the array needs resizing
-                if (NumServers == V.Length)
+                if ((i = FindServer(name)) == -1)
                 {
-                    DoubleCapacity();
+
+                    if (NumServers == V.Length)
+                    {
+                        DoubleCapacity();
+                    }
+
+                    V[NumServers] = new WebServer(name);
+                    E[NumServers, j] = true;
+                    E[j, NumServers] = true;
+
+                    NumServers++;
+
+
+                    Console.WriteLine("Added server: " + name);
+
+                    return true;
+
                 }
-
-                // Add the new server and connect it to the existing server
-                // Add the new server
-                V[NumServers] = new WebServer(name);
-                V[NumServers].E = new List<bool>(new bool[NumServers]);
-
-                V[NumServers].E[FindServer(other)] = true;  // Connect the new server to the existing server
-                V[FindServer(other)].E.Add(true);
-
-                NumServers++;
-
-                // Print the name of the added server
-                Console.WriteLine("Added server: " + name);
-
-                return true;
             }
             else
             {
-                Console.WriteLine("Server already exists.");
+                Console.WriteLine("Other server doesnt exists.");
+                return false;
+
             }
-        }
-        else
-        {
-            Console.WriteLine("The other server does not exist.");
+
+            return false;
+
+
         }
 
         return false;
+
+
+
     }
-
-
-
-
+    // 3 marks
+    // Add a webpage to the server with the given name
+    // Return true if successful; otherwise return false
     public bool AddWebPage(WebPage w, string name)
     {
         int i = FindServer(name);
 
         if (i > -1)
         {
-            Console.WriteLine("adding webpage!");
-
             V[i].P.Add(w);
-
-            if (V[i].P.Count > 0)
-            {
-                Console.WriteLine("Count of the page is: " + V[i].P.Count);
-                Console.WriteLine("page count went up...");
-                for (int K = 0; K < V[i].P.Count; K++)
-                {
-                    Console.WriteLine(V[i].P[K].Name);
-                    Console.WriteLine(V[i].P.Count);
-                }
-
-             }
             return true;
         }
-        Console.WriteLine("Server with that name can not be found to add page");
         return false;
-    }
 
+    }
+    // Remove the server with the given name by assigning its connections
+    // and webpages to the other server
+    // Return true if successful; otherwise return false
     public bool RemoveServer(string name, string other)
     {
         int i = FindServer(name);
         int j = FindServer(other);
 
         if (i == -1 || j == -1)
-            return false;
-
-        for (int s = 0; s < NumServers; s++)
         {
-            if (s != i)
-            {
-                if (V[i].E[s])
-                {
-                    V[j].E[s] = true;
-                    if (V[s].E[i])
-                    {
-                        V[s].E[j] = true;
-                    }
-                }
-                NumServers--;
-                return true;
-            }
+            Console.WriteLine("Both servers or one of the servers does not exist.");
+            return false;
         }
-        return false;
+        else
+        {
+
+
+            foreach (WebPage page in V[i].P)
+            {
+
+                V[j].P.Add(page);
+                Console.WriteLine(page + "is being move to server" + other);
+            }
+
+
+
+            for (int s = i; s < NumServers - 1; s++)
+            {
+                V[s] = V[s + 1];
+                for (int t = 0; t < NumServers; t++)
+                {
+                    E[s, t] = E[s + 1, t];
+                    E[t, s] = E[t, s + 1];
+                }
+            }
+
+
+            Console.WriteLine(name + " server has be Removed");
+
+            NumServers--;
+
+            return true;
+
+        }
+
+
     }
 
+    // Remove the webpage from the server with the given name
+    // Return true if successful; otherwise return false
+    public bool RemoveWebPage(string webpage, string name)
+    {
+
+        return false;
+    }
+    // 3 marks
+    // Add a connection from one server to another
+    // Return true if successful; otherwise return false
+    // Note that each server is connected to at least one other server
     public bool AddConnection(string from, string to)
     {
         int indexOfFrom = FindServer(from);
@@ -188,284 +229,236 @@ public class ServerGraph : WebGraph
             return true;
         }
         return false;
-    }
 
+    }
+    // 10 marks
+    // Return all servers that would disconnect the server graph into
+    // two or more disjoint graphs if ever one of them would go down
+    // Hint: Use a variation of the depth-first search
     public string[] CriticalServers()
     {
-        int i;
-        int j = 0;
         int time = 0;
         bool[] visited = new bool[NumServers];
         int[] disc = new int[NumServers];
         int[] low = new int[NumServers];
         int[] parent = new int[NumServers];
-        bool[] artipoints = new bool[NumServers]; // To store articulation points
-        string[] result = new string[NumServers]; // To store the resulting string
+        bool[] artipoints = new bool[NumServers];
+        List<string> result = new List<string>(); // Use a list to store the resulting critical servers
 
-        for (i = 0; i < NumServers; i++)     // Set all vertices as unvisited
+        for (int i = 0; i < NumServers; i++)
         {
-            visited[i] = false;
-            artipoints[i] = false;
-            parent[i] = -1;
+            if (!visited[i])
+            {
+                CriticalServers(i, ref time, visited, disc, low, parent, artipoints, result);
+            }
         }
 
-
-        for (i = 0; i < NumServers; i++)
-            if (!visited[i])                  // (Re)start with vertex i
-            {
-                CriticalServers(i, time, visited, disc, low, parent, artipoints);
-                Console.WriteLine();
-            }
-
-        // Now artipoints[] contains articulation points, print them
-        for (i = 0; i < NumServers; i++)
-        {
-            if (artipoints[i] == true)
-            {
-                Console.Write(i + " ");
-                result[j] = i.ToString();
-                j++;
-
-            }
-
-        }
-        return result;
+        return result.ToArray(); // Convert the list to an array and return
     }
 
-    private void CriticalServers(int i, int time, bool[] visited, int[] disc, int[] low, int[] parent, bool[] artipoints)
+    private void CriticalServers(int i, ref int time, bool[] visited, int[] disc, int[] low, int[] parent, bool[] artipoints, List<string> result)
     {
-        int j;
-        // Count of children in DFS Tree
         int children = 0;
-        // Sets the discovery and lowest discovery time to the passed time variable.
         disc[i] = low[i] = ++time;
+        visited[i] = true;
 
-        visited[i] = true;    // Mark vertex as visited after processing
-
-        for (j = 0; j < NumServers; j++)   // Visit next unvisited adjacent vertex
+        for (int j = 0; j < NumServers; j++)
         {
-            if (V[i].E[j] && !visited[j])
+            if (E[i, j] && !visited[j] && V[j] != null) // Check if there's a connection and the server exists
             {
                 children++;
                 parent[j] = i;
-                CriticalServers(j, time, visited, disc, low, parent, artipoints);
+                CriticalServers(j, ref time, visited, disc, low, parent, artipoints, result);
 
-                // Check if the subtree rooted with j has
-                // a connection to one of the ancestors of i
                 low[i] = Math.Min(low[i], low[j]);
 
-                // i is a critical server (articulation point) if any of the following statements hold true:
-                // Case 1:  i is the root of the tree and has 2 or more children
-                if (parent[i] == -1 && children > 1)
+                if ((parent[i] == -1 && children > 1) || (parent[i] != -1 && low[j] >= disc[i]))
+                {
                     artipoints[i] = true;
-
-                // Case 2: i isn't a root of the tree, and one of its children have a lowest discovery time 
-                // greater than i's discovery time
-                if (parent[i] != -1 && low[j] >= disc[i])
-                    artipoints[i] = true;
+                }
             }
-            // Update low value of i for parent function calls.
-            else if (j != parent[i] && V[i].E[j])
+            else if (j != parent[i])
+            {
                 low[i] = Math.Min(low[i], disc[j]);
+            }
+        }
+
+        if (artipoints[i])
+        {
+            result.Add(V[i].Name); // Add the critical server to the result list
         }
     }
 
-    /*		
-    // Print Method
-     string[] result = gp.CriticalServers();
-     for (int i = 0; i < result.Length; i++)
-     {
-         Console.Write(result[i] + " ");
-     }
-     Console.WriteLine(); */
-
-
-    public int ShortestPath(string from, string to)
+    public void PrintCriticalServers(string[] criticalServers)
     {
-        int fromIndex = FindServer(from);
-        int toIndex = FindServer(to);
-
-        if (fromIndex == -1 || toIndex == -1)
+        Console.WriteLine("Critical Servers:");
+        foreach (string server in criticalServers)
         {
-            Console.WriteLine("Server not found.");
-            return -1;
+            Console.WriteLine(server);
         }
+    }
 
-        Queue<WebServer> queue = new Queue<WebServer>();
-        bool[] visited = new bool[NumServers];
-        int[] distances = new int[NumServers];
 
-        queue.Enqueue(V[fromIndex]);
-        visited[fromIndex] = true;
-        distances[fromIndex] = 0;
-
-        while (queue.Count > 0)
+    // 4 marks
+    // Print the name and connections of each server as well as
+    // the names of the webpages it hosts
+    public new void PrintGraph()
+    {
+        for (int i = 0; i < NumServers; i++)
         {
-            WebServer currentServer = queue.Dequeue();
+            Console.WriteLine("Server: " + V[i].Name);
+            Console.WriteLine("Connections:");
 
-            if (currentServer == V[toIndex])
-                return distances[FindServer(currentServer.Name)];
-
-            for (int i = 0; i < NumServers; i++)
+            for (int j = 0; j < NumServers; j++)
             {
-                if (currentServer.E[i] && !visited[i])
+                if (E[i, j])
                 {
-                    queue.Enqueue(V[i]);
-                    visited[i] = true;
-                    distances[i] = distances[FindServer(currentServer.Name)] + 1;
+                    Console.WriteLine("- " + V[j].Name);
                 }
             }
-        }
 
-        Console.WriteLine("No path found.");
-        return -1;
-    }
+            Console.WriteLine("Webpages:");
+            for (int s = 0; s < V[i].P.Count; s++)
+            {
+                Console.WriteLine("- " + V[i].P[s].Name);
+            }
 
-    public new void PrintGraph(){
-
-        Console.WriteLine(NumServers);
-
-        for (int i = 0; i < NumServers; i++){
-
-
-
-        Console.WriteLine("(" + V[i].Name + "," + V[i].P[i].Name + ")" );
-       
-
+            Console.WriteLine();
         }
     }
 
 
-        // Console.WriteLine("(" + V[i].Name + "," + V[i].E[j] + "," + V[i].P[j].Name + ")");
 
 
+    static void Main()
+    {
 
-        static void Main()
+        ServerGraph serverGraph = new ServerGraph();
+        WebGraph webGraph = new WebGraph();
+
+        while (true)
         {
 
 
+            Console.WriteLine("\n1: Add Server ");
+            Console.WriteLine("2: Add Page ");
+            Console.WriteLine("3: Find shortest Path");
+            Console.WriteLine("4: double the capacity ");
+            Console.WriteLine("5: Print the graph ");
+            Console.WriteLine("6: Locate the Critical servers ");
+            Console.WriteLine("7: Remove the page ");
+            Console.WriteLine("8: Remove the Server ");
+            Console.WriteLine("9: Add Hyperlink between pages ");
+            Console.WriteLine("exit: type [exit] to close the application ");
 
-            // gp.AddServer("server1", "hi");
+            for (int i = 0; i < 36; i++)
+            {
+                Console.Write("-");
+            }
 
-            // WebPage pages = new WebPage("facebook", "server1");
-            // //   gp.AddPage("facebook","server1",gp);
+            Console.WriteLine("\ntype the opertaion you would like to perform ");
+            string input = Console.ReadLine();
 
-            // Console.WriteLine(gp.V.Length); //before the method 
-            // gp.DoubleCapacity();
-            // Console.WriteLine(gp.V.Length); //after 
-            // gp.PrintGraph();
-            // gp.DoubleCapacity();
-            // gp.DoubleCapacity();
-            // gp.DoubleCapacity();
-            // Console.WriteLine(gp.V.Length);
-            // ServerGraph gp = new ServerGraph();
-            ServerGraph serverGraph = new ServerGraph();
-            WebGraph webGraph = new WebGraph();
+            if (input == "1")
+            {
+                Console.WriteLine("Enter 1st server name: ");
+                string server1 = Console.ReadLine();
+                Console.WriteLine("Enter 2nd server name: ");
+                string server2 = Console.ReadLine();
+                Console.WriteLine("\nResult:");
+                serverGraph.AddServer(server1, server2);
 
-            while (true)
+            }
+
+            else if (input == "2")
+            {
+                Console.WriteLine("Enter your website name: ");
+                string websiteName = Console.ReadLine();
+                Console.WriteLine("Enter the server you want to host your webiste at: ");
+                string hostingServer = Console.ReadLine();
+                Console.WriteLine("\nResult: ");
+                WebPage page = new WebPage(websiteName, hostingServer);
+                serverGraph.AddWebPage(page, hostingServer);
+            }
+            else if (input == "3")
+            {
+                Console.WriteLine("Enter starting server: ");
+                string startingServer = Console.ReadLine();
+                Console.WriteLine("Enter the server you want to get to: ");
+                string serverToGetTo = Console.ReadLine();
+                Console.WriteLine("\nResult: ");
+                // Console.WriteLine(serverGraph.AvgShortestPaths());
+
+            }
+            else if (input == "4")
             {
 
 
-                Console.WriteLine("\n1: Add Server ");
-                Console.WriteLine("2: Add Page ");
-                Console.WriteLine("3: Find shortest Path");
-                Console.WriteLine("4: double the capacity ");
-                Console.WriteLine("5: Print the graph ");
-                Console.WriteLine("6: Locate the Critical servers ");
-                Console.WriteLine("7: Remove the page ");
-                Console.WriteLine("exit: type [exit] to close the application ");
+                int oldCapacity = serverGraph.V.Length;
+                serverGraph.DoubleCapacity();
+                int newCapacity = serverGraph.V.Length;
 
-                for (int i = 0; i < 36; i++)
-                {
-                    Console.Write("-");
-                }
+                Console.WriteLine("server capacifty incresed from " + oldCapacity + " to " + newCapacity);
+            }
 
-                Console.WriteLine("\ntype the opertaion you would like to perform ");
-                string input = Console.ReadLine();
-
-                if (input == "1")
-                {
-                    Console.WriteLine("Enter 1st server name: ");
-                    string server1 = Console.ReadLine();
-                    Console.WriteLine("Enter 2nd server name: ");
-                    string server2 = Console.ReadLine();
-                    Console.WriteLine("\nResult:");
-                    serverGraph.AddServer(server1, server2);
-
-                }
-
-                else if (input == "2")
-                {
-                    Console.WriteLine("Enter your website name: ");
-                    string websiteName = Console.ReadLine();
-                    Console.WriteLine("Enter the server you want to host your webiste at: ");
-                    string hostingServer = Console.ReadLine();
-                    Console.WriteLine("\nResult: ");
-                    WebPage page = new WebPage(websiteName, hostingServer);
-                    serverGraph.AddWebPage(page, hostingServer);
-                }
-                else if (input == "3")
-                {
-                    Console.WriteLine("Enter starting server: ");
-                    string startingServer = Console.ReadLine();
-                    Console.WriteLine("Enter the server you want to get to: ");
-                    string serverToGetTo = Console.ReadLine();
-                    Console.WriteLine("\nResult: ");
-                    Console.WriteLine(serverGraph.ShortestPath(startingServer, serverToGetTo));
-
-                }
-                else if (input == "4")
-                {
+            else if (input == "5")
+            {
 
 
-                    int oldCapacity = serverGraph.V.Length;
-                    serverGraph.DoubleCapacity();
-                    int newCapacity = serverGraph.V.Length;
-
-                    Console.WriteLine("server capacifty incresed from " + oldCapacity + " to " + newCapacity);
-                }
-
-                else if (input == "5")
-                {
-
-
-                    Console.WriteLine("Printing graph...\n");
-                    serverGraph.PrintGraph();
-
-                }
-
-                else if (input == "6")
-                {
-                    string[] result3 = serverGraph.CriticalServers();
-                    for (int i = 0; i < result3.Length; i++)
-                    {
-                        Console.Write(result3[i] + " ");
-                    }
-                }
-
-
-                else if (input == "7")
-                {
-                    Console.WriteLine("Enter the name of the page ");
-                    string pageName = Console.ReadLine();
-                    webGraph.RemovePage(pageName, serverGraph);
-                }
-
-                else if (input == "exit")
-                {
-
-                    Environment.Exit(0);
-
-                }
-
-
-                else
-                {
-                    Console.WriteLine("'Oops you were close bud, try again!'");
-
-                }
+                Console.WriteLine("Printing graph...\n");
+                serverGraph.PrintGraph();
 
             }
+
+            else if (input == "6")
+            {
+                string[] criticalServers = serverGraph.CriticalServers();
+                serverGraph.PrintCriticalServers(criticalServers);      
+            }
+
+
+            else if (input == "7")
+            {
+                Console.WriteLine("Enter the name of the page ");
+                string pageName = Console.ReadLine();
+                webGraph.RemovePage(pageName, serverGraph);
+            }
+
+            else if (input == "8")
+            {
+                Console.WriteLine("Enter server1 name: ");
+                string firstServerName = Console.ReadLine();
+                Console.WriteLine("Enter server2 name");
+                string secondServerName = Console.ReadLine();
+                serverGraph.RemoveServer(firstServerName, secondServerName);
+            }
+
+            else if (input == "9")
+            {
+                Console.WriteLine("Enter the 1st page name ");
+                string firstPage = Console.ReadLine();
+                Console.WriteLine("Enter the 2nd page name ");
+                string secondPage = Console.ReadLine();
+                webGraph.AddLink(firstPage, secondPage);
+
+
+            }
+
+            else if (input == "exit")
+            {
+
+                Environment.Exit(0);
+
+            }
+
+
+            else
+            {
+                Console.WriteLine("'Oops you were close bud, try again!'");
+
+            }
+
         }
     }
+}
 
