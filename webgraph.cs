@@ -134,23 +134,45 @@ public class WebGraph
     // given name to each of its hyperlinks
     // Hint: Use the method ShortestPath in the class ServerGraph
 
-    public float AvgShortestPaths(string name, ServerGraph S)
-    {
-    //     int i = FindPage(name);
+    // public int ShortestPath(string from, string to)
+    // {
+    //     int Startpoint = FindServer(from);
+    //     int endpoint = FindServer(to);
 
-    //     if (i == -1)
+    //     if (Startpoint == -1 || endpoint == -1)
     //     {
-    //         console.WriteLine("webpage does not exist.");
+    //         Console.WriteLine("Server or server can not found.");
     //         return -1;
     //     }
 
-        // WebPage webPage = P[i];
+    //     Queue<int>  Q = new Queue<int>(); 
+    //     bool[] visited = new bool[NumServers];
+    //     int[] distances = new int[NumServers];
 
-        return -1;
+    //     Q.Enqueue(Startpoint); 
+    //     visited[Startpoint] = true;
+    //     distances[Startpoint] = 0;
 
+    //     while (Q.Count > 0)
+    //     {
+    //         int currentServerIndex = Q.Dequeue(); 
 
+    //         if (currentServerIndex == endpoint) 
+    //             return distances[endpoint]; 
+    //         for (int i = 0; i < NumServers; i++)
+    //         {
+    //             if (E[currentServerIndex, i] && !visited[i]) 
+    //             {
+    //                 Q.Enqueue(i); 
+    //                 visited[i] = true;
+    //                 distances[i] = distances[currentServerIndex] + 1; 
+    //             }
+    //         }
+    //     }
 
-    }
+    //     Console.WriteLine("No path found.");
+    //     return -1;
+    // }
 
     public void PrintGraph()
     {

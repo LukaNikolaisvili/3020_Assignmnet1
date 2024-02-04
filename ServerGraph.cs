@@ -87,7 +87,7 @@ public class ServerGraph : WebGraph
         if (NumServers == 0)
         {
             Console.WriteLine("No servers Exist");
-            Console.WriteLine("Creating new serever called 'Root' ");
+            Console.WriteLine("Creating new server called 'Root' ");
 
             V[NumServers] = new WebServer("Root");
             E[0, 0] = false;
@@ -335,7 +335,8 @@ public class ServerGraph : WebGraph
 
         ServerGraph serverGraph = new ServerGraph();
         WebGraph webGraph = new WebGraph();
-
+        serverGraph.AddServer("", "");
+        
         while (true)
         {
 
@@ -359,14 +360,17 @@ public class ServerGraph : WebGraph
             Console.WriteLine("\ntype the opertaion you would like to perform ");
             string input = Console.ReadLine();
 
-            if (input == "1")
-            {
+            if (input == "1"){   
+                if(serverGraph.NumServers > 0){
                 Console.WriteLine("Enter 1st server name: ");
                 string server1 = Console.ReadLine();
                 Console.WriteLine("Enter 2nd server name: ");
                 string server2 = Console.ReadLine();
                 Console.WriteLine("\nResult:");
                 serverGraph.AddServer(server1, server2);
+            }
+            
+              
 
             }
 
@@ -387,7 +391,7 @@ public class ServerGraph : WebGraph
                 Console.WriteLine("Enter the server you want to get to: ");
                 string serverToGetTo = Console.ReadLine();
                 Console.WriteLine("\nResult: ");
-                // Console.WriteLine(serverGraph.AvgShortestPaths());
+                // Console.WriteLine(serverGraph.AvgShortestPaths(startingServer,serverGraph));
 
             }
             else if (input == "4")
@@ -426,9 +430,9 @@ public class ServerGraph : WebGraph
 
             else if (input == "8")
             {
-                Console.WriteLine("Enter server1 name: ");
+                Console.WriteLine("Enter the server name that you want to remove : ");
                 string firstServerName = Console.ReadLine();
-                Console.WriteLine("Enter server2 name");
+                Console.WriteLine("Enter the server you want to move removed server's connections to: ");
                 string secondServerName = Console.ReadLine();
                 serverGraph.RemoveServer(firstServerName, secondServerName);
             }
