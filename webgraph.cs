@@ -186,7 +186,10 @@ public class WebGraph
     // Prints the webgraph!
     public void PrintGraph()
     {
-
+        foreach (WebPage page in P)
+        {
+            Console.WriteLine(page.Name);
+        }
 
     }
 }

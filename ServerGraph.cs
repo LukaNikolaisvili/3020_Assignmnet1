@@ -416,6 +416,8 @@ public class ServerGraph : WebGraph
                 Console.WriteLine("\nResult: ");
                 WebPage page = new WebPage(websiteName, hostingServer);
                 serverGraph.AddWebPage(page, hostingServer);
+                webGraph.AddPage(websiteName, hostingServer, serverGraph);
+
             }
 
             // The Average Shortest Path
@@ -471,7 +473,7 @@ public class ServerGraph : WebGraph
             {
                 Console.WriteLine("Enter the name of the server you wish to remove : ");
                 string firstServerName = Console.ReadLine();
-                Console.WriteLine("Enter the server you want to move '" + firstServerName +"'s' connections to: ");
+                Console.WriteLine("Enter the server you want to move '" + firstServerName + "'s' connections to: ");
                 string secondServerName = Console.ReadLine();
                 serverGraph.RemoveServer(firstServerName, secondServerName);
             }
