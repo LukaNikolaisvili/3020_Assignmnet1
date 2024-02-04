@@ -26,7 +26,7 @@ public class WebPage
         Server = host;
         Console.WriteLine(name + " is hosted on " + host);
         E = new List<WebPage>();
-        
+
     }
 
     public int FindLink(string name)
@@ -60,19 +60,25 @@ public class WebGraph
     // Adds a webpage with the given name, attached to the host server, 
     // and passed with a servergaph object to work with
     public bool AddPage(string name, string host, ServerGraph S)
-{
-    if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(host) || S == null)
     {
-        return false;
-    }
-    else
-    {
-        WebPage createPage = new WebPage(name, host);
-        S.P.Add(createPage); 
+        if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(host) || S == null)
+        {
+            return false;
+        }
+        else
+        {
+            // Create a new WebPage instance
+            WebPage createPage = new WebPage(name, host);
 
-        return true;
+            // Add the webpage to the list of web pages in WebGraph
+            P.Add(createPage);
+
+            // Add the webpage to the server graph
+            S.P.Add(createPage);
+
+            return true;
+        }
     }
-}
 
     // Removes a page with the given name, with a passed servergraph object to interact with.
     public bool RemovePage(string name, ServerGraph S)
