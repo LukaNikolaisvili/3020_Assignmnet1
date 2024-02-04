@@ -8,7 +8,6 @@ Farzad Imran - 0729901
 Freddrick Nkwonta - 0703772
 
 -----------------
-
 */
 
 
@@ -58,7 +57,8 @@ public class WebGraph
         return -1;
     }
 
-
+    // Adds a webpage with the given name, attached to the host server, 
+    // and passed with a servergaph object to work with
     public bool AddPage(string name, string host, ServerGraph S)
 {
     if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(host) || S == null)
@@ -74,7 +74,7 @@ public class WebGraph
     }
 }
 
-
+    // Removes a page with the given name, with a passed servergraph object to interact with.
     public bool RemovePage(string name, ServerGraph S)
     {
 
@@ -89,6 +89,8 @@ public class WebGraph
         return false;
     }
 
+    // Adds a link that connects one webpage to another
+    // It's like a server connection but for webpages! :D
     public bool AddLink(string from, string to)
     {
 
@@ -106,6 +108,7 @@ public class WebGraph
 
     }
 
+    // Removes a link from the starting page that connects to the ending page if found
     public bool RemoveLink(string from, string to)
     {
 
@@ -174,6 +177,7 @@ public class WebGraph
     //     return -1;
     // }
 
+    // Prints the webgraph!
     public void PrintGraph()
     {
 
