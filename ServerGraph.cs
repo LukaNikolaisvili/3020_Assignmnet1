@@ -22,7 +22,7 @@ public class ServerGraph : WebGraph
     // 3 marks
     // Webserver Constructor
 
-    
+
     private class WebServer
     {
         public string Name;
@@ -34,7 +34,7 @@ public class ServerGraph : WebGraph
             Name = name;
             P = new List<WebPage>();
             E = new List<bool>();
-            
+
         }
 
     }
@@ -53,10 +53,10 @@ public class ServerGraph : WebGraph
         V = new WebServer[1];
         E = new bool[1, 1];
         NumServers = 0;
-   
+
     }
 
-    
+
     // 2 marks
     // Return the index of the server with the given name; otherwise return -1
     private int FindServer(string name)
@@ -70,7 +70,7 @@ public class ServerGraph : WebGraph
         return -1;
     }
 
-     public int FindServerFromOutside(string name)
+    public int FindServerFromOutside(string name)
     {
         // Call the private FindServer method internally
         return FindServer(name);
@@ -103,15 +103,17 @@ public class ServerGraph : WebGraph
     public bool AddServer(string name, string other)
     {
 
-        if(String.IsNullOrEmpty(name) || String.IsNullOrEmpty(other)){
+        if (String.IsNullOrEmpty(name) || String.IsNullOrEmpty(other))
+        {
             Console.WriteLine("you can not pass empty variable name");
-            
+            return false;
+
         }
 
         // Initial If statement to see if there is a server to connect to
         // If none (0) the method would not work because it calls 2 servers to connect to
         // Each other. So it initializes a Root Server.
-        if (NumServers == 0 )
+        if (NumServers == 0)
         {
             Console.WriteLine("No servers Exist");
             Console.WriteLine("Creating new server called 'Root' ");
@@ -128,7 +130,7 @@ public class ServerGraph : WebGraph
         int i, j;
 
         // This is the other if statement to add servers normally
-        if (NumServers >= 1 )
+        if (NumServers >= 1)
         {
             // if the second server passed as a variable exists, the code will continue
             if ((j = FindServer(other)) != -1)
@@ -338,7 +340,7 @@ public class ServerGraph : WebGraph
     // Return the shortest path from one server to another
     // Hint: Use a variation of the breadth-first search
 
-   public int ShortestPath(string from, string to)
+    public int ShortestPath(string from, string to)
     {
         int Startpoint = FindServer(from);
         int endpoint = FindServer(to);
@@ -498,7 +500,7 @@ public class ServerGraph : WebGraph
                 Console.WriteLine("Enter the server you want to find the shortest path to: ");
                 string serverToGetTo = Console.ReadLine();
                 Console.WriteLine("\nResult: ");
-                Console.WriteLine(serverGraph.ShortestPath(startingServer,serverToGetTo));
+                Console.WriteLine(serverGraph.ShortestPath(startingServer, serverToGetTo));
 
             }
 
@@ -536,7 +538,7 @@ public class ServerGraph : WebGraph
             {
                 Console.WriteLine("Enter the name of the page you want to remove ");
                 string pageName = Console.ReadLine();
-                webGraph.RemovePage(pageName,serverGraph);
+                webGraph.RemovePage(pageName, serverGraph);
             }
 
             // Removes a server
@@ -553,7 +555,7 @@ public class ServerGraph : WebGraph
             else if (input == "9")
             {
                 Console.WriteLine("Enter the 1st page name ");
-                firstPage= Console.ReadLine();
+                firstPage = Console.ReadLine();
                 Console.WriteLine("Enter the 2nd page name ");
                 secondPage = Console.ReadLine();
                 webGraph.AddLink(firstPage, secondPage);
@@ -561,11 +563,12 @@ public class ServerGraph : WebGraph
 
             }
 
-            else if(input == "0"){
+            else if (input == "0")
+            {
 
                 Console.WriteLine("Enter the name of webpage ");
                 string webpage = Console.ReadLine();
-                webGraph.AvgShortestPaths(webpage,serverGraph);
+                webGraph.AvgShortestPaths(webpage, serverGraph);
             }
 
             // Exits the While Loop
