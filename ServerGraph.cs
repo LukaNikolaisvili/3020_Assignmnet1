@@ -45,7 +45,8 @@ public class ServerGraph : WebGraph
     public static string firstPage = "";
     public static string secondPage = "";
 
-
+    //2 marks
+    // Create an empty server graph
     // Server Graph Initialization
     public ServerGraph()
     {
@@ -61,9 +62,9 @@ public class ServerGraph : WebGraph
     // Return the index of the server with the given name; otherwise return -1
     private int FindServer(string name)
     {
-        for (int i = 0; i < NumServers; i++)
+        for (int i = 0; i < NumServers; i++)  // look through the different existing servers 
         {
-            if (string.Equals(V[i].Name.Trim(), name.Trim(), StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(V[i].Name.Trim(), name.Trim(), StringComparison.OrdinalIgnoreCase)) //compare the name giving to the server names 
                 return i;
 
         }
@@ -82,10 +83,12 @@ public class ServerGraph : WebGraph
     private void DoubleCapacity()
     {
 
+        // Double the capacity of V
         int newVLength = V.Length * 2;
         Array.Resize(ref V, newVLength);
 
 
+        // Double the capacity of E
         int rowCounter = E.GetLength(0);
         int columnCounter = E.GetLength(1);
 
@@ -122,6 +125,7 @@ public class ServerGraph : WebGraph
 
         }
 
+        //check if name is passed by user is empty 
         if (String.IsNullOrEmpty(name) || String.IsNullOrEmpty(other))
         {
             Console.WriteLine("you can not pass empty variable name");
@@ -183,16 +187,17 @@ public class ServerGraph : WebGraph
     // Return true if successful; otherwise return false
     public bool AddWebPage(WebPage w, string name)
     {
-        int i = FindServer(name);
+        int i = FindServer(name);  // finds out if server exist 
 
         if (i > -1)
         {
-            V[i].P.Add(w);
+            V[i].P.Add(w); // adds webpage
             return true;
         }
         return false;
 
     }
+    // 4 marks
     // Remove the server with the given name by assigning its connections
     // and webpages to the other server
     // Return true if successful; otherwise return false
@@ -209,10 +214,9 @@ public class ServerGraph : WebGraph
         else
         {
 
-            // Moves each Webpage in name (i) to other (j)
+            // Moves each Webpage from named server to other server 
             foreach (WebPage page in V[i].P)
             {
-
                 V[j].P.Add(page);
                 Console.WriteLine(page + "is being moved to server" + other);
             }
@@ -233,7 +237,7 @@ public class ServerGraph : WebGraph
 
             Console.WriteLine("The server with the name '" + name + "' has been removed");
 
-            NumServers--;
+            NumServers--; // reduces server count 
 
             return true;
 
@@ -242,45 +246,25 @@ public class ServerGraph : WebGraph
 
     }
 
-    
-    public bool RemoveWebPage(string webpageName, string serverName)
+    // Remove the webpage from the server with the given name
+    // Return true if successful; otherwise return false
+    public bool RemoveWebPage(string webpage, string name)
     {
-        int serverIndex = FindServer(serverName);
-        if (serverIndex == -1) 
-        return false; // Server not found
-
-        
-        var server = V[serverIndex];
-        WebPage webpageToRemove = null;
-
-       //looking for each  webpage
-        foreach (var webpage in server.P)
-        {
-            if (webpage.Name == webpageName)
-            {
-                webpageToRemove = webpage;
-                break; // break the loop when we will find the webpage that we want to remove 
-            }
-        }
-
-        if (webpageToRemove != null)
-        {
-            server.P.Remove(webpageToRemove);
-            return true;
-        }
 
         return false;
     }
-
     // 3 marks
     // Add a connection from one server to another
     // Return true if successful; otherwise return false
     // Note that each server is connected to at least one other server
     public bool AddConnection(string from, string to)
     {
+        //find if both servers exists 
         int indexOfFrom = FindServer(from);
         int indexOfTo = FindServer(to);
 
+
+        //if both servers create a connection between them 
         if (indexOfFrom != -1 && indexOfTo != -1)
         {
             V[indexOfFrom].E[indexOfTo] = true;
@@ -365,64 +349,55 @@ public class ServerGraph : WebGraph
     // Return the shortest path from one server to another
     // Hint: Use a variation of the breadth-first search
 
-    //finds the shortest path
+    // Perform breadth-first search to find the shortest path from one server to another
     public int ShortestPath(string from, string to)
     {
-        int startIndex = FindServer(from); 
-        int endIndex = FindServer(to);    
+        int startIndex = FindServer(from); // Find index of the starting server
+        int endIndex = FindServer(to);     // Find index of the destination server
 
-        // Check if both servers exist in the graph
-        if (startIndex == -1 || endIndex == -1)
+        // Check if both servers exist
+        if (Startpoint == -1 || endpoint == -1)
         {
             //when it will jump in this if statement it will print -1
             return -1;
         }
 
-        //Array of booleans with the size of Numbersers
-        bool[] visited = new bool[NumServers]; 
-        //And distances int array with numservers size
-        int[] distances = new int[NumServers]; 
-        //Que of integers
-        Queue<int> queue = new Queue<int>();   
+        bool[] visited = new bool[NumServers]; // Array for track visited servers
+        int[] distances = new int[NumServers]; // Array for store distances from the starting server
+        Queue<int> queue = new Queue<int>();   // Queue for BFS traversal
 
-        //looping through each time as Numservers
+        // Initialize visited array and distances array
         for (int i = 0; i < NumServers; i++)
-        {   
-            //updating each index of i to false
+        {
             visited[i] = false;
-            //adding the distance to be -1 for each index
-            distances[i] = -1; 
+            distances[i] = -1; // Initialize distances to -1 (indicating unreachable)
         }
 
-    //the star index 
+        // Enqueue the starting server index and mark it as visited
         queue.Enqueue(startIndex);
-        //visited will be changed to true
         visited[startIndex] = true;
-        //distance will be assigned to 0
-        distances[startIndex] = 0; 
+        distances[startIndex] = 0; // Distance from starting server to itself is 0
 
-        //while queue has count greater than 0 it will go in this while loop 
+        // Perform BFS traversal
         while (queue.Count > 0)
-        {   
-            
+        {
             int currentServerIndex = queue.Dequeue();
 
-           
+            //  returns the distance from the starting server if it reach the server its going to
             if (currentServerIndex == endIndex)
-            {   
-                
+            {
                 return distances[endIndex];
             }
 
-          
+            // Explore neighbors of the current server
             for (int neighborIndex = 0; neighborIndex < NumServers; neighborIndex++)
             {
-                
+                // Check if the neighbor is connected to the current server and is not visited
                 if (E[currentServerIndex, neighborIndex] && !visited[neighborIndex])
                 {
-                    queue.Enqueue(neighborIndex);     
-                    visited[neighborIndex] = true;   
-                    distances[neighborIndex] = distances[currentServerIndex] + 1; 
+                    queue.Enqueue(neighborIndex);     // Enqueue the neighbor
+                    visited[neighborIndex] = true;    // Mark neighbor as visited
+                    distances[neighborIndex] = distances[currentServerIndex] + 1; // Update distance
                 }
             }
         }
@@ -619,12 +594,13 @@ public class ServerGraph : WebGraph
                 webGraph.AvgShortestPaths(webpage, serverGraph);
             }
 
-            else if (input == "10"){
+            else if (input == "10")
+            {
                 Console.WriteLine("Enter page name that you want to unlink from ");
                 string pageFrom = Console.ReadLine();
                 Console.WriteLine("Enter page name that you want to be unlinked to ");
                 string pageTo = Console.ReadLine();
-                webGraph.RemoveLink(pageFrom,pageTo);
+                webGraph.RemoveLink(pageFrom, pageTo);
             }
 
             // Exits the While Loop
