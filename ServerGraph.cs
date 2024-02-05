@@ -242,13 +242,36 @@ public class ServerGraph : WebGraph
 
     }
 
-    // Remove the webpage from the server with the given name
-    // Return true if successful; otherwise return false
-    public bool RemoveWebPage(string webpage, string name)
+    
+    public bool RemoveWebPage(string webpageName, string serverName)
     {
+        int serverIndex = FindServer(serverName);
+        if (serverIndex == -1) 
+        return false; // Server not found
+
+        
+        var server = V[serverIndex];
+        WebPage webpageToRemove = null;
+
+       //looking for each  webpage
+        foreach (var webpage in server.P)
+        {
+            if (webpage.Name == webpageName)
+            {
+                webpageToRemove = webpage;
+                break; // break the loop when we will find the webpage that we want to remove 
+            }
+        }
+
+        if (webpageToRemove != null)
+        {
+            server.P.Remove(webpageToRemove);
+            return true;
+        }
 
         return false;
     }
+
     // 3 marks
     // Add a connection from one server to another
     // Return true if successful; otherwise return false
@@ -342,42 +365,55 @@ public class ServerGraph : WebGraph
     // Return the shortest path from one server to another
     // Hint: Use a variation of the breadth-first search
 
+    // Perform breadth-first search to find the shortest path from one server to another
     public int ShortestPath(string from, string to)
     {
-        int Startpoint = FindServer(from);
-        int endpoint = FindServer(to);
+        int startIndex = FindServer(from); // Find index of the starting server
+        int endIndex = FindServer(to);     // Find index of the destination server
 
-        // Check if both servers exist
-        if (Startpoint == -1 || endpoint == -1)
+        // Check if both servers exist in the graph
+        if (startIndex == -1 || endIndex == -1)
         {
             // Server not found, return -1 indicating no path found
             return -1;
         }
 
-        Queue<int> Q = new Queue<int>();
-        bool[] visited = new bool[NumServers];
-        int[] distances = new int[NumServers];
+        bool[] visited = new bool[NumServers]; // Array to track visited servers
+        int[] distances = new int[NumServers]; // Array to store distances from the starting server
+        Queue<int> queue = new Queue<int>();   // Queue for BFS traversal
 
-        Q.Enqueue(Startpoint);
-        visited[Startpoint] = true;
-        distances[Startpoint] = 0;
-
-        while (Q.Count > 0)
+        // Initialize visited array and distances array
+        for (int i = 0; i < NumServers; i++)
         {
-            int currentServerIndex = Q.Dequeue();
+            visited[i] = false;
+            distances[i] = -1; // Initialize distances to -1 (indicating unreachable)
+        }
 
-            // If we reached the destination server, return its distance
-            if (currentServerIndex == endpoint)
-                return distances[endpoint];
+        // Enqueue the starting server index and mark it as visited
+        queue.Enqueue(startIndex);
+        visited[startIndex] = true;
+        distances[startIndex] = 0; // Distance from starting server to itself is 0
+
+        // Perform BFS traversal
+        while (queue.Count > 0)
+        {
+            int currentServerIndex = queue.Dequeue();
+
+            // If we reached the destination server, return its distance from the starting server
+            if (currentServerIndex == endIndex)
+            {
+                return distances[endIndex];
+            }
 
             // Explore neighbors of the current server
-            for (int i = 0; i < NumServers; i++)
+            for (int neighborIndex = 0; neighborIndex < NumServers; neighborIndex++)
             {
-                if (E[currentServerIndex, i] && !visited[i])
+                // Check if the neighbor is connected to the current server and is not visited
+                if (E[currentServerIndex, neighborIndex] && !visited[neighborIndex])
                 {
-                    Q.Enqueue(i);
-                    visited[i] = true;
-                    distances[i] = distances[currentServerIndex] + 1;
+                    queue.Enqueue(neighborIndex);     // Enqueue the neighbor
+                    visited[neighborIndex] = true;    // Mark neighbor as visited
+                    distances[neighborIndex] = distances[currentServerIndex] + 1; // Update distance
                 }
             }
         }

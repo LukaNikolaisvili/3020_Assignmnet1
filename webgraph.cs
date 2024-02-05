@@ -69,13 +69,12 @@ public class WebGraph
     // Return the index of the webpage with the given name; otherwise return -1
     private int FindPage(string name)
     {
-
         for (int i = 0; i < P.Count; i++)
         {
             if (P[i].Name == name)
-                return 1;
+                return i; // Return the index if found
         }
-        return -1;
+        return -1; // Return -1 if not found
     }
 
     // Adds a webpage with the given name, attached to the host server, 
@@ -109,35 +108,60 @@ public class WebGraph
         }
     }
 
-    // Removes a page with the given name, with a passed servergraph object to interact with.
-    public void RemovePage(string name, ServerGraph S)
+    //this method will remove the page based on the page name that we will provide to it
+    public bool RemovePage(string name, ServerGraph S)
     {
-        int index = S.FindPage(name);
-        if (index != -1)
+        int pageIndex = FindPage(name);
+        if (pageIndex == -1) 
+        return false; // Webpage not found
+
+        // Remove the webpage from the WebGraph
+        WebPage pageToRemove = P[pageIndex];
+        P.RemoveAt(pageIndex);
+
+        
+        foreach (var page in P)
         {
-            S.P.RemoveAt(index);
+            for (int i = page.E.Count - 1; i >= 0; i--)
+            {
+                if (page.E[i].Name == name)
+                {
+                    page.E.RemoveAt(i);
+                }
+            }
         }
+
+      
+        bool removedFromServer = S.RemoveWebPage(name, pageToRemove.Server);
+
+        //returns boolean true or false, if removed true, if not false
+        return removedFromServer;
     }
 
     // Adds a link that connects one webpage to another
     // It's like a server connection but for webpages! :D
     public bool AddLink(string from, string to)
+{
+    int indexFrom = FindPage(from);
+    int indexTo = FindPage(to);
+
+    // Check if both pages exist
+    if (indexFrom == -1 || indexTo == -1)
     {
-
-        int indexFrom = FindPage(from);
-        int indexTo = FindPage(to);
-
-        if (indexFrom != -1 && indexTo != -1)
-        {
-            P[indexFrom].E.Add(P[indexTo]);
-
-
-            return true;
-        }
-
-        return false;
-
+        return false; // since its or, and we want to link pages, it will return false, because true and false is true...
     }
+
+    // Check for an existing link to avoid duplication
+    var existingLink = P[indexFrom].E.Find(page => page.Name == to);
+    if (existingLink != null)
+    {
+        return false; // returns false because Link already there.
+    }
+
+    // Add the link
+    P[indexFrom].E.Add(P[indexTo]);
+    return true;
+}
 
     // Removes a link from the starting page that connects to the ending page if found
     public bool RemoveLink(string from, string to)
@@ -189,11 +213,11 @@ public class WebGraph
             if (shortestLinkPath != -1)
             {
                 shortestPath += shortestLinkPath;
-                Console.WriteLine($"Shortest path {P[locatePage].Server} to {links.Server} is: {shortestLinkPath}");
+                Console.WriteLine($"The most short path {P[locatePage].Server} to the {links.Server} -- {shortestLinkPath}");
             }
         }
 
-        // Checks iif the number of edges on the page equals 0,
+        // Checks if the number of edges on the page equals 0,
         // If so that means no hyperlinks
         if (P[locatePage].E.Count == 0)
         {
@@ -210,24 +234,25 @@ public class WebGraph
 
 
 
-    // Prints the webgraph!
+    // Prints the webgraph
     public void PrintGraph()
     {
-        WebGraph wg = new WebGraph();
-        ServerGraph sg = new ServerGraph();
         foreach (WebPage page in P)
         {
-            if (page.FindLink(page.Name) > -1)
+            Console.WriteLine("Webpage: " + page.Name);
+            if (page.E.Count > 0)
             {
-
-                Console.WriteLine("website with name: \n" + ServerGraph.firstPage + " is linked to " + ServerGraph.secondPage);
+                Console.WriteLine("Hyperlinks:");
+                foreach (WebPage hyperlink in page.E)
+                {
+                    Console.WriteLine("- " + hyperlink.Name);
+                }
             }
             else
             {
-                Console.WriteLine("website with name: \n" + page.Name + " does not have any links");
+                Console.WriteLine("No hyperlinks.");
             }
-
+            Console.WriteLine();
         }
     }
-
 }
