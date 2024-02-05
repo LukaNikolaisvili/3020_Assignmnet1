@@ -21,6 +21,8 @@ public class ServerGraph : WebGraph
 {
     // 3 marks
     // Webserver Constructor
+
+    
     private class WebServer
     {
         public string Name;
@@ -32,6 +34,7 @@ public class ServerGraph : WebGraph
             Name = name;
             P = new List<WebPage>();
             E = new List<bool>();
+            
         }
 
     }
@@ -39,6 +42,8 @@ public class ServerGraph : WebGraph
     private WebServer[] V;
     private bool[,] E;
     private int NumServers;
+    public static string firstPage = "";
+    public static string secondPage = "";
 
 
     // Server Graph Initialization
@@ -48,9 +53,12 @@ public class ServerGraph : WebGraph
         V = new WebServer[1];
         E = new bool[1, 1];
         NumServers = 0;
+       
 
-
+   
     }
+
+    
     // 2 marks
     // Return the index of the server with the given name; otherwise return -1
     private int FindServer(string name)
@@ -63,6 +71,14 @@ public class ServerGraph : WebGraph
         }
         return -1;
     }
+
+     public int FindServerFromOutside(string name)
+    {
+        // Call the private FindServer method internally
+        return FindServer(name);
+    }
+
+
     // 3 marks
     // Double the capacity of the server graph with the respect to web servers
     private void DoubleCapacity()
@@ -461,9 +477,6 @@ public class ServerGraph : WebGraph
                 string websiteName = Console.ReadLine();
                 Console.WriteLine("Enter the server you want to host your webiste at: ");
                 string hostingServer = Console.ReadLine();
-                Console.WriteLine("\nResult: ");
-                WebPage page = new WebPage(websiteName, hostingServer);
-                serverGraph.AddWebPage(page, hostingServer);
                 webGraph.AddPage(websiteName, hostingServer, serverGraph);
 
             }
@@ -531,9 +544,9 @@ public class ServerGraph : WebGraph
             else if (input == "9")
             {
                 Console.WriteLine("Enter the 1st page name ");
-                string firstPage = Console.ReadLine();
+                firstPage= Console.ReadLine();
                 Console.WriteLine("Enter the 2nd page name ");
-                string secondPage = Console.ReadLine();
+                secondPage = Console.ReadLine();
                 webGraph.AddLink(firstPage, secondPage);
 
 

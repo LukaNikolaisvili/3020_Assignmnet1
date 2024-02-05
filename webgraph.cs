@@ -25,7 +25,11 @@ public class WebPage
     {
         Name = name;
         Server = host;
+        
+        Console.WriteLine("host or server with this name can not be found! ");
+   
         Console.WriteLine(name + " is hosted on " + host);
+
         E = new List<WebPage>();
 
     }
@@ -85,16 +89,23 @@ public class WebGraph
         }
         else
         {
-            // Create a new WebPage instance
+            // Instantiate a new WebPage object
             WebPage createPage = new WebPage(name, host);
 
-            // Add the webpage to the list of web pages in WebGraph
-            P.Add(createPage);
+            // Add the webpage to the server in the ServerGraph
+            bool addedSuccessfully = S.AddWebPage(createPage, host);
 
-            // Add the webpage to the server graph
-            S.P.Add(createPage);
-
-            return true;
+            // If the page was added successfully to the server in the ServerGraph, add it to the WebGraph
+            if (addedSuccessfully)
+            {
+                P.Add(createPage);
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Server does not exist.");
+                return false;
+            }
         }
     }
 
@@ -124,7 +135,7 @@ public class WebGraph
         if (indexFrom != -1 && indexTo != -1)
         {
             P[indexFrom].E.Add(P[indexTo]);
-            P[indexTo].E.Add(P[indexFrom]);
+            
 
             return true;
         }
@@ -158,17 +169,17 @@ public class WebGraph
     }
 
   
-
     // Prints the webgraph!
     public void PrintGraph()
     {
-
         WebGraph wg = new WebGraph();
+        ServerGraph sg = new ServerGraph();
         foreach (WebPage page in P)
         {
-            if (page.FindLink(page.Name) > -1)
+            if (page.FindLink(page.Name) > -1 )
             {
-                Console.WriteLine("website with name: \n" + page.Name + " is linked to " + " other page name ");
+                
+                Console.WriteLine("website with name: \n" + ServerGraph.firstPage + " is linked to " + ServerGraph.secondPage);
             }
             else
             {
