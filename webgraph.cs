@@ -173,40 +173,41 @@ public class WebGraph
 // Return the average length of the shortest paths from the webpage with
 // given name to each of its hyperlinks
 // Hint: Use the method ShortestPath in the class ServerGraph
-public float AvgShortestPaths(string name, ServerGraph S){
-
+public float AvgShortestPaths(string name, ServerGraph S)
+{
     int locatePage = FindPage(name);
 
-    if(locatePage == -1){
+    if (locatePage == -1)
+    {
         Console.WriteLine("Page with this name does not exist");
-
         return -1;
     }
 
-    foreach(var links in P[locatePage].E){
-        var hosts = links.Server;
-        Console.WriteLine(hosts);
+    int shortestPath = 0;
+    foreach (var links in P[locatePage].E)
+    {
+        var shortestLinkPath = S.ShortestPath(P[locatePage].Server, links.Server);
+        if (shortestLinkPath != -1)
+        {
+            shortestPath += shortestLinkPath;
+            Console.WriteLine($"Shortest path {P[locatePage].Server} to {links.Server} is: {shortestLinkPath}");
+        }
     }
 
-    int shortestPath = 1;
-    foreach (var links in P[locatePage].E){
-    var shortestLinkPath = S.ShortestPath(P[locatePage].Server, links.Server);
-    shortestPath += shortestLinkPath;
-
-    Console.WriteLine($"Shortest path {P[locatePage].Server} to {links.Server} is: {shortestLinkPath}");
+    if (P[locatePage].E.Count == 0)
+    {
+        Console.WriteLine("No hyperlinks found for this page.");
+        return -1;
     }
 
-     float avg = shortestPath / P[locatePage].E.Count;
-
-
-    
+    float avg = (float)shortestPath / P[locatePage].E.Count;
 
     return avg;
-
-
-
-   
 }
+
+
+
+
   
     // Prints the webgraph!
     public void PrintGraph()

@@ -341,7 +341,8 @@ public class ServerGraph : WebGraph
     // given name to each of its hyperlinks
     // Hint: Use the method ShortestPath in the class ServerGraph
 
-   public int ShortestPath(string from, string to){
+   public int ShortestPath(string from, string to)
+{
     int Startpoint = FindServer(from);
     int endpoint = FindServer(to);
 
@@ -500,7 +501,7 @@ public class ServerGraph : WebGraph
                 Console.WriteLine("Enter the server you want to find the shortest path to: ");
                 string serverToGetTo = Console.ReadLine();
                 Console.WriteLine("\nResult: ");
-                Console.WriteLine(serverGraph.AvgShortestPaths(startingServer,serverGraph));
+                Console.WriteLine(serverGraph.ShortestPath(startingServer,serverToGetTo));
 
             }
 
