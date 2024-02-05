@@ -27,11 +27,6 @@ public class WebPage
     {
         Name = name;
         Server = host;
-        
-        Console.WriteLine("host or server with this name can not be found! ");
-   
-        Console.WriteLine(name + " is hosted on " + host);
-
         E = new List<WebPage>();
 
     }
@@ -103,6 +98,7 @@ public class WebGraph
             if (addedSuccessfully)
             {
                 P.Add(createPage);
+                Console.WriteLine(name + " is hosted on " + host);
                 return true;
             }
             else
@@ -114,14 +110,14 @@ public class WebGraph
     }
 
     // Removes a page with the given name, with a passed servergraph object to interact with.
-  public void RemovePage(string name,ServerGraph S)
-{
-    int index = S.FindPage(name);
-    if (index != -1)
+    public void RemovePage(string name, ServerGraph S)
     {
-        S.P.RemoveAt(index);
+        int index = S.FindPage(name);
+        if (index != -1)
+        {
+            S.P.RemoveAt(index);
+        }
     }
-}
 
     // Adds a link that connects one webpage to another
     // It's like a server connection but for webpages! :D
@@ -134,7 +130,7 @@ public class WebGraph
         if (indexFrom != -1 && indexTo != -1)
         {
             P[indexFrom].E.Add(P[indexTo]);
-            
+
 
             return true;
         }
@@ -168,52 +164,52 @@ public class WebGraph
     }
 
 
-// 6 marks
-// Return the average length of the shortest paths from the webpage with
-// given name to each of its hyperlinks
-// Hint: Use the method ShortestPath in the class ServerGraph
-public float AvgShortestPaths(string name, ServerGraph S)
-{
-    // Initial check to see if the page exists
-    // Can't search for something that isn't there!
-    int locatePage = FindPage(name);
-
-    if (locatePage == -1)
+    // 6 marks
+    // Return the average length of the shortest paths from the webpage with
+    // given name to each of its hyperlinks
+    // Hint: Use the method ShortestPath in the class ServerGraph
+    public float AvgShortestPaths(string name, ServerGraph S)
     {
-        Console.WriteLine("Page with this name does not exist");
-        return -1;
-    }
+        // Initial check to see if the page exists
+        // Can't search for something that isn't there!
+        int locatePage = FindPage(name);
 
-    int shortestPath = 0;       // Initial counter for the Shortest path
-    foreach (var links in P[locatePage].E)
-    {
-        // Function call to find the shortest path
-        var shortestLinkPath = S.ShortestPath(P[locatePage].Server, links.Server);
-        // If a shortest path was found (-1 if not)
-        if (shortestLinkPath != -1)
+        if (locatePage == -1)
         {
-            shortestPath += shortestLinkPath;
-            Console.WriteLine($"Shortest path {P[locatePage].Server} to {links.Server} is: {shortestLinkPath}");
+            Console.WriteLine("Page with this name does not exist");
+            return -1;
         }
+
+        int shortestPath = 0;       // Initial counter for the Shortest path
+        foreach (var links in P[locatePage].E)
+        {
+            // Function call to find the shortest path
+            var shortestLinkPath = S.ShortestPath(P[locatePage].Server, links.Server);
+            // If a shortest path was found (-1 if not)
+            if (shortestLinkPath != -1)
+            {
+                shortestPath += shortestLinkPath;
+                Console.WriteLine($"Shortest path {P[locatePage].Server} to {links.Server} is: {shortestLinkPath}");
+            }
+        }
+
+        // Checks iif the number of edges on the page equals 0,
+        // If so that means no hyperlinks
+        if (P[locatePage].E.Count == 0)
+        {
+            Console.WriteLine("No hyperlinks found for this page.");
+            return -1;
+        }
+
+        float avg = (float)shortestPath / P[locatePage].E.Count;
+
+        return avg;
     }
 
-    // Checks iif the number of edges on the page equals 0,
-    // If so that means no hyperlinks
-    if (P[locatePage].E.Count == 0)
-    {
-        Console.WriteLine("No hyperlinks found for this page.");
-        return -1;
-    }
-
-    float avg = (float)shortestPath / P[locatePage].E.Count;
-
-    return avg;
-}
 
 
 
 
-  
     // Prints the webgraph!
     public void PrintGraph()
     {
@@ -221,9 +217,9 @@ public float AvgShortestPaths(string name, ServerGraph S)
         ServerGraph sg = new ServerGraph();
         foreach (WebPage page in P)
         {
-            if (page.FindLink(page.Name) > -1 )
+            if (page.FindLink(page.Name) > -1)
             {
-                
+
                 Console.WriteLine("website with name: \n" + ServerGraph.firstPage + " is linked to " + ServerGraph.secondPage);
             }
             else
