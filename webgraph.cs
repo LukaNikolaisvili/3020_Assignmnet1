@@ -110,19 +110,14 @@ public class WebGraph
     }
 
     // Removes a page with the given name, with a passed servergraph object to interact with.
-    public bool RemovePage(string name, ServerGraph S)
+  public void RemovePage(string name,ServerGraph S)
+{
+    int index = S.FindPage(name);
+    if (index != -1)
     {
-
-        int id = FindPage(name);
-        if (id != -1)
-        {
-            Console.WriteLine("Page was found and its removed: ");
-            S.P.RemoveAt(id);
-            return true;
-        }
-        Console.WriteLine("Page with that name is not found, try again. ");
-        return false;
+        S.P.RemoveAt(index);
     }
+}
 
     // Adds a link that connects one webpage to another
     // It's like a server connection but for webpages! :D
@@ -230,7 +225,3 @@ public float AvgShortestPaths(string name, ServerGraph S)
     }
 
 }
-
-
-
-

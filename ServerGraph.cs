@@ -398,6 +398,7 @@ public class ServerGraph : WebGraph
     }
 
 
+
     // 4 marks
     // Print the name and connections of each server as well as
     // the names of the webpages it hosts
@@ -438,7 +439,6 @@ public class ServerGraph : WebGraph
         // Initialization
         ServerGraph serverGraph = new ServerGraph();
         WebGraph webGraph = new WebGraph();
-
         // Initial function call for AddServer to create a Root server
         // This way the user does not need to enter the add server command twice
         // To make the server they wanted at program launch.
@@ -537,9 +537,9 @@ public class ServerGraph : WebGraph
             // Remove a webpage from a server
             else if (input == "7")
             {
-                Console.WriteLine("Enter the name of the page you want to add ");
+                Console.WriteLine("Enter the name of the page you want to remove ");
                 string pageName = Console.ReadLine();
-                webGraph.RemovePage(pageName, serverGraph);
+                webGraph.RemovePage(pageName,serverGraph);
             }
 
             // Removes a server
