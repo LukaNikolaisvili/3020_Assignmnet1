@@ -17,10 +17,12 @@ using System.Formats.Tar;
 
 public class WebPage
 {
+    // Getters and Setters
     public string Name { get; set; }
     public string Server { get; set; }
     public List<WebPage> E { get; set; }
 
+    // Constructors
     public WebPage(string name, string host)
     {
         Name = name;
@@ -34,6 +36,7 @@ public class WebPage
 
     }
 
+    // Method to find the current index location of a link
     public int FindLink(string name)
     {
         WebGraph wg = new WebGraph();
@@ -63,6 +66,7 @@ public class WebGraph
 
     public WebGraph()
     {
+        // Declare a list for webpages
         P = new List<WebPage>();
     }
 
@@ -170,6 +174,8 @@ public class WebGraph
 // Hint: Use the method ShortestPath in the class ServerGraph
 public float AvgShortestPaths(string name, ServerGraph S)
 {
+    // Initial check to see if the page exists
+    // Can't search for something that isn't there!
     int locatePage = FindPage(name);
 
     if (locatePage == -1)
@@ -178,10 +184,12 @@ public float AvgShortestPaths(string name, ServerGraph S)
         return -1;
     }
 
-    int shortestPath = 0;
+    int shortestPath = 0;       // Initial counter for the Shortest path
     foreach (var links in P[locatePage].E)
     {
+        // Function call to find the shortest path
         var shortestLinkPath = S.ShortestPath(P[locatePage].Server, links.Server);
+        // If a shortest path was found (-1 if not)
         if (shortestLinkPath != -1)
         {
             shortestPath += shortestLinkPath;
@@ -189,6 +197,8 @@ public float AvgShortestPaths(string name, ServerGraph S)
         }
     }
 
+    // Checks iif the number of edges on the page equals 0,
+    // If so that means no hyperlinks
     if (P[locatePage].E.Count == 0)
     {
         Console.WriteLine("No hyperlinks found for this page.");
