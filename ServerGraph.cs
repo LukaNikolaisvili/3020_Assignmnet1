@@ -103,12 +103,7 @@ public class ServerGraph : WebGraph
     public bool AddServer(string name, string other)
     {
 
-        if (String.IsNullOrEmpty(name) || String.IsNullOrEmpty(other))
-        {
-            Console.WriteLine("you can not pass empty variable name");
-            return false;
 
-        }
 
         // Initial If statement to see if there is a server to connect to
         // If none (0) the method would not work because it calls 2 servers to connect to
@@ -123,6 +118,13 @@ public class ServerGraph : WebGraph
             NumServers = NumServers + 1;
 
             Console.WriteLine("No servers Added ");
+            return false;
+
+        }
+
+        if (String.IsNullOrEmpty(name) || String.IsNullOrEmpty(other))
+        {
+            Console.WriteLine("you can not pass empty variable name");
             return false;
 
         }
