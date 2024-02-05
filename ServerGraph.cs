@@ -365,55 +365,64 @@ public class ServerGraph : WebGraph
     // Return the shortest path from one server to another
     // Hint: Use a variation of the breadth-first search
 
-    // Perform breadth-first search to find the shortest path from one server to another
+    //finds the shortest path
     public int ShortestPath(string from, string to)
     {
-        int startIndex = FindServer(from); // Find index of the starting server
-        int endIndex = FindServer(to);     // Find index of the destination server
+        int startIndex = FindServer(from); 
+        int endIndex = FindServer(to);    
 
         // Check if both servers exist in the graph
         if (startIndex == -1 || endIndex == -1)
         {
-            // Server not found, return -1 indicating no path found
+            //when it will jump in this if statement it will print -1
             return -1;
         }
 
-        bool[] visited = new bool[NumServers]; // Array to track visited servers
-        int[] distances = new int[NumServers]; // Array to store distances from the starting server
-        Queue<int> queue = new Queue<int>();   // Queue for BFS traversal
+        //Array of booleans with the size of Numbersers
+        bool[] visited = new bool[NumServers]; 
+        //And distances int array with numservers size
+        int[] distances = new int[NumServers]; 
+        //Que of integers
+        Queue<int> queue = new Queue<int>();   
 
-        // Initialize visited array and distances array
+        //looping through each time as Numservers
         for (int i = 0; i < NumServers; i++)
-        {
+        {   
+            //updating each index of i to false
             visited[i] = false;
-            distances[i] = -1; // Initialize distances to -1 (indicating unreachable)
+            //adding the distance to be -1 for each index
+            distances[i] = -1; 
         }
 
-        // Enqueue the starting server index and mark it as visited
+    //the star index 
         queue.Enqueue(startIndex);
+        //visited will be changed to true
         visited[startIndex] = true;
-        distances[startIndex] = 0; // Distance from starting server to itself is 0
+        //distance will be assigned to 0
+        distances[startIndex] = 0; 
 
-        // Perform BFS traversal
+        //while queue has count greater than 0 it will go in this while loop 
         while (queue.Count > 0)
-        {
+        {   
+            
             int currentServerIndex = queue.Dequeue();
 
-            // If we reached the destination server, return its distance from the starting server
+           
             if (currentServerIndex == endIndex)
-            {
+            {   
+                
                 return distances[endIndex];
             }
 
-            // Explore neighbors of the current server
+          
             for (int neighborIndex = 0; neighborIndex < NumServers; neighborIndex++)
             {
-                // Check if the neighbor is connected to the current server and is not visited
+                
                 if (E[currentServerIndex, neighborIndex] && !visited[neighborIndex])
                 {
-                    queue.Enqueue(neighborIndex);     // Enqueue the neighbor
-                    visited[neighborIndex] = true;    // Mark neighbor as visited
-                    distances[neighborIndex] = distances[currentServerIndex] + 1; // Update distance
+                    queue.Enqueue(neighborIndex);     
+                    visited[neighborIndex] = true;   
+                    distances[neighborIndex] = distances[currentServerIndex] + 1; 
                 }
             }
         }
@@ -495,6 +504,7 @@ public class ServerGraph : WebGraph
             Console.WriteLine("8: Remove the Server ");
             Console.WriteLine("9: Add Hyperlink between pages ");
             Console.WriteLine("0: Find AVG shortest Path");
+            Console.WriteLine("10: Remove Link");
             Console.WriteLine("exit: type [exit] to close the application ");
             // Creates a fancy bar separator so commands are away from prompts
             for (int i = 0; i < 36; i++)
@@ -607,6 +617,14 @@ public class ServerGraph : WebGraph
                 Console.WriteLine("Enter the name of webpage ");
                 string webpage = Console.ReadLine();
                 webGraph.AvgShortestPaths(webpage, serverGraph);
+            }
+
+            else if (input == "10"){
+                Console.WriteLine("Enter page name that you want to unlink from ");
+                string pageFrom = Console.ReadLine();
+                Console.WriteLine("Enter page name that you want to be unlinked to ");
+                string pageTo = Console.ReadLine();
+                webGraph.RemoveLink(pageFrom,pageTo);
             }
 
             // Exits the While Loop

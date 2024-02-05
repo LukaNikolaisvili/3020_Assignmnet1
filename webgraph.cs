@@ -115,23 +115,27 @@ public class WebGraph
         if (pageIndex == -1) 
         return false; // Webpage not found
 
-        // Remove the webpage from the WebGraph
+       //Webpage object pageToremove will be assigned to P[pageIndex]
         WebPage pageToRemove = P[pageIndex];
+        //and with the method remove at we will remove with index
         P.RemoveAt(pageIndex);
 
-        
+       
         foreach (var page in P)
-        {
+        {   
+            //starting from the end and going to the beginning(reversed) basically 
             for (int i = page.E.Count - 1; i >= 0; i--)
-            {
+            {   
+                //if page at index I name is the same as the name that we want to remove 
                 if (page.E[i].Name == name)
-                {
+                {   
+                    //then we will go ahead and remove that index
                     page.E.RemoveAt(i);
                 }
             }
         }
 
-      
+        //for printing out keeping the boolean variable declared and assigned to be returned out from the method
         bool removedFromServer = S.RemoveWebPage(name, pageToRemove.Server);
 
         //returns boolean true or false, if removed true, if not false
@@ -158,34 +162,35 @@ public class WebGraph
         return false; // returns false because Link already there.
     }
 
-    // Add the link
     P[indexFrom].E.Add(P[indexTo]);
+
     return true;
 }
 
     // Removes a link from the starting page that connects to the ending page if found
     public bool RemoveLink(string from, string to)
+{
+       //indexes of from to TO
+    int indexFrom = FindPage(from);
+    int indexTo = FindPage(to);
+
+       //checking if both are not equal to one 
+    if (indexFrom != -1 && indexTo != -1)
     {
-
-        int indexFrom = FindPage(from);
-        int indexTo = FindPage(to);
-
-        if (indexFrom != -1 && indexTo != 1)
+      //if indexFrom contains IndexTo
+        if (P[indexFrom].E.Contains(P[indexTo]))
         {
-
-
-            if (P[indexFrom].E.Contains(P[indexTo]))
-            {
-
-                P[indexFrom].E.Remove(P[indexTo]);
-
-                return true;
-            }
+               //we will remove link between them
+            P[indexFrom].E.Remove(P[indexTo]);
+            
+                //return true
+            return true;
         }
-
-        return false;
-
     }
+
+    //return false if there is no link or page does not exist at all
+    return false;
+}
 
 
     // 6 marks
