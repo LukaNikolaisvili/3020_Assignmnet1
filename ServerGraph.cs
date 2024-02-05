@@ -313,6 +313,53 @@ public class ServerGraph : WebGraph
         }
     }
 
+
+      // 6 marks
+    // Return the average length of the shortest paths from the webpage with
+    // given name to each of its hyperlinks
+    // Hint: Use the method ShortestPath in the class ServerGraph
+
+    public int ShortestPath(string from, string to)
+    {
+        int Startpoint = FindServer(from);
+        int endpoint = FindServer(to);
+
+        if (Startpoint == -1 || endpoint == -1)
+        {
+            Console.WriteLine("Server or server can not found.");
+            return -1;
+        }
+
+        Queue<int>  Q = new Queue<int>(); 
+        bool[] visited = new bool[NumServers];
+        int[] distances = new int[NumServers];
+
+        Q.Enqueue(Startpoint); 
+        visited[Startpoint] = true;
+        distances[Startpoint] = 0;
+
+        while (Q.Count > 0)
+        {
+            int currentServerIndex = Q.Dequeue(); 
+
+            if (currentServerIndex == endpoint) 
+                return distances[endpoint]; 
+            for (int i = 0; i < NumServers; i++)
+            {
+                if (E[currentServerIndex, i] && !visited[i]) 
+                {
+                    Q.Enqueue(i); 
+                    visited[i] = true;
+                    distances[i] = distances[currentServerIndex] + 1; 
+                }
+            }
+        }
+
+        Console.WriteLine("No path found.");
+        return -1;
+    }
+
+
     // Method to print out the critical servers, using each string in the found array.
     public void PrintCriticalServers(string[] criticalServers)
     {
