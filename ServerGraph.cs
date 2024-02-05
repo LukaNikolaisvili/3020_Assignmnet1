@@ -104,10 +104,16 @@ public class ServerGraph : WebGraph
     // Return true if successful; otherwise return false
     public bool AddServer(string name, string other)
     {
+
+        if(String.IsNullOrEmpty(name) || String.IsNullOrEmpty(other)){
+            Console.WriteLine("you can not pass empty variable name");
+            
+        }
+
         // Initial If statement to see if there is a server to connect to
         // If none (0) the method would not work because it calls 2 servers to connect to
         // Each other. So it initializes a Root Server.
-        if (NumServers == 0)
+        if (NumServers == 0 )
         {
             Console.WriteLine("No servers Exist");
             Console.WriteLine("Creating new server called 'Root' ");
@@ -124,7 +130,7 @@ public class ServerGraph : WebGraph
         int i, j;
 
         // This is the other if statement to add servers normally
-        if (NumServers >= 1)
+        if (NumServers >= 1 )
         {
             // if the second server passed as a variable exists, the code will continue
             if ((j = FindServer(other)) != -1)
@@ -335,45 +341,49 @@ public class ServerGraph : WebGraph
     // given name to each of its hyperlinks
     // Hint: Use the method ShortestPath in the class ServerGraph
 
-    public int ShortestPath(string from, string to)
+   public int ShortestPath(string from, string to){
+    int Startpoint = FindServer(from);
+    int endpoint = FindServer(to);
+
+    // Check if both servers exist
+    if (Startpoint == -1 || endpoint == -1)
     {
-        int Startpoint = FindServer(from);
-        int endpoint = FindServer(to);
-
-        if (Startpoint == -1 || endpoint == -1)
-        {
-            Console.WriteLine("Server or server can not found.");
-            return -1;
-        }
-
-        Queue<int>  Q = new Queue<int>(); 
-        bool[] visited = new bool[NumServers];
-        int[] distances = new int[NumServers];
-
-        Q.Enqueue(Startpoint); 
-        visited[Startpoint] = true;
-        distances[Startpoint] = 0;
-
-        while (Q.Count > 0)
-        {
-            int currentServerIndex = Q.Dequeue(); 
-
-            if (currentServerIndex == endpoint) 
-                return distances[endpoint]; 
-            for (int i = 0; i < NumServers; i++)
-            {
-                if (E[currentServerIndex, i] && !visited[i]) 
-                {
-                    Q.Enqueue(i); 
-                    visited[i] = true;
-                    distances[i] = distances[currentServerIndex] + 1; 
-                }
-            }
-        }
-
-        Console.WriteLine("No path found.");
+        // Server not found, return -1 indicating no path found
         return -1;
     }
+
+    Queue<int> Q = new Queue<int>();
+    bool[] visited = new bool[NumServers];
+    int[] distances = new int[NumServers];
+
+    Q.Enqueue(Startpoint);
+    visited[Startpoint] = true;
+    distances[Startpoint] = 0;
+
+    while (Q.Count > 0)
+    {
+        int currentServerIndex = Q.Dequeue();
+
+        // If we reached the destination server, return its distance
+        if (currentServerIndex == endpoint)
+            return distances[endpoint];
+
+        // Explore neighbors of the current server
+        for (int i = 0; i < NumServers; i++)
+        {
+            if (E[currentServerIndex, i] && !visited[i])
+            {
+                Q.Enqueue(i);
+                visited[i] = true;
+                distances[i] = distances[currentServerIndex] + 1;
+            }
+        }
+    }
+
+    // If no path found, return -1
+    return -1;
+}
+
 
 
     // Method to print out the critical servers, using each string in the found array.
@@ -446,6 +456,7 @@ public class ServerGraph : WebGraph
             Console.WriteLine("7: Remove the page ");
             Console.WriteLine("8: Remove the Server ");
             Console.WriteLine("9: Add Hyperlink between pages ");
+            Console.WriteLine("0: Find AVG shortest Path");
             Console.WriteLine("exit: type [exit] to close the application ");
             // Creates a fancy bar separator so commands are away from prompts
             for (int i = 0; i < 36; i++)
@@ -489,7 +500,7 @@ public class ServerGraph : WebGraph
                 Console.WriteLine("Enter the server you want to find the shortest path to: ");
                 string serverToGetTo = Console.ReadLine();
                 Console.WriteLine("\nResult: ");
-                // Console.WriteLine(serverGraph.AvgShortestPaths(startingServer,serverGraph));
+                Console.WriteLine(serverGraph.AvgShortestPaths(startingServer,serverGraph));
 
             }
 
@@ -550,6 +561,13 @@ public class ServerGraph : WebGraph
                 webGraph.AddLink(firstPage, secondPage);
 
 
+            }
+
+            else if(input == "0"){
+
+                Console.WriteLine("Enter the name of webpage ");
+                string webpage = Console.ReadLine();
+                webGraph.AvgShortestPaths(webpage,serverGraph);
             }
 
             // Exits the While Loop
