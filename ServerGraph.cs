@@ -53,8 +53,6 @@ public class ServerGraph : WebGraph
         V = new WebServer[1];
         E = new bool[1, 1];
         NumServers = 0;
-       
-
    
     }
 
@@ -336,54 +334,53 @@ public class ServerGraph : WebGraph
     }
 
 
-      // 6 marks
-    // Return the average length of the shortest paths from the webpage with
-    // given name to each of its hyperlinks
-    // Hint: Use the method ShortestPath in the class ServerGraph
+    // 6 marks
+    // Return the shortest path from one server to another
+    // Hint: Use a variation of the breadth-first search
 
    public int ShortestPath(string from, string to)
-{
-    int Startpoint = FindServer(from);
-    int endpoint = FindServer(to);
-
-    // Check if both servers exist
-    if (Startpoint == -1 || endpoint == -1)
     {
-        // Server not found, return -1 indicating no path found
-        return -1;
-    }
+        int Startpoint = FindServer(from);
+        int endpoint = FindServer(to);
 
-    Queue<int> Q = new Queue<int>();
-    bool[] visited = new bool[NumServers];
-    int[] distances = new int[NumServers];
-
-    Q.Enqueue(Startpoint);
-    visited[Startpoint] = true;
-    distances[Startpoint] = 0;
-
-    while (Q.Count > 0)
-    {
-        int currentServerIndex = Q.Dequeue();
-
-        // If we reached the destination server, return its distance
-        if (currentServerIndex == endpoint)
-            return distances[endpoint];
-
-        // Explore neighbors of the current server
-        for (int i = 0; i < NumServers; i++)
+        // Check if both servers exist
+        if (Startpoint == -1 || endpoint == -1)
         {
-            if (E[currentServerIndex, i] && !visited[i])
+            // Server not found, return -1 indicating no path found
+            return -1;
+        }
+
+        Queue<int> Q = new Queue<int>();
+        bool[] visited = new bool[NumServers];
+        int[] distances = new int[NumServers];
+
+        Q.Enqueue(Startpoint);
+        visited[Startpoint] = true;
+        distances[Startpoint] = 0;
+
+        while (Q.Count > 0)
+        {
+            int currentServerIndex = Q.Dequeue();
+
+            // If we reached the destination server, return its distance
+            if (currentServerIndex == endpoint)
+                return distances[endpoint];
+
+            // Explore neighbors of the current server
+            for (int i = 0; i < NumServers; i++)
             {
-                Q.Enqueue(i);
-                visited[i] = true;
-                distances[i] = distances[currentServerIndex] + 1;
+                if (E[currentServerIndex, i] && !visited[i])
+                {
+                    Q.Enqueue(i);
+                    visited[i] = true;
+                    distances[i] = distances[currentServerIndex] + 1;
+                }
             }
         }
-    }
 
-    // If no path found, return -1
-    return -1;
-}
+        // If no path found, return -1
+        return -1;
+    }
 
 
 
